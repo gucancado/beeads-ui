@@ -1,0 +1,30 @@
+{
+  "name": "@beeads/tokens",
+  "version": "0.0.0",
+  "description": "Design tokens (CSS vars) do design system beeads — suporta Tailwind v3 e v4",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gucancado/beeads-ui",
+    "directory": "packages/tokens"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": ["dist"],
+  "exports": {
+    ".": "./dist/index.js",
+    "./theme.css": "./dist/theme.css",
+    "./preset.cjs": "./dist/preset.cjs"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup && node ../../scripts/copy-assets.mjs tokens theme.css preset.cjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
