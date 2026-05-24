@@ -1,0 +1,36 @@
+{
+  "name": "@beeads/fonts",
+  "version": "0.0.0",
+  "description": "Fontes do design system beeads — Fraunces + Geist Mono via next/font",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gucancado/beeads-ui",
+    "directory": "packages/fonts"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "peerDependencies": {
+    "next": ">=14"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "next": "^16.2.6",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
