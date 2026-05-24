@@ -13,11 +13,16 @@
   },
   "files": ["dist"],
   "exports": {
-    ".": "./dist/index.js",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
     "./theme.css": "./dist/theme.css",
     "./preset.cjs": "./dist/preset.cjs"
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup && node ../../scripts/copy-assets.mjs tokens theme.css preset.cjs",
