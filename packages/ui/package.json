@@ -1,6 +1,6 @@
 {
   "name": "@beeads/ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Componentes UI do design system beeads — primitivos sobre @base-ui/react",
   "license": "MIT",
   "repository": {

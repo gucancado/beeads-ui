@@ -1,6 +1,6 @@
 {
   "name": "@beeads/fonts",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Fontes do design system beeads — Fraunces + Geist Mono via next/font",
   "license": "MIT",
   "repository": {
@@ -11,7 +11,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

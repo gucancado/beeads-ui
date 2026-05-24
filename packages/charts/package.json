@@ -1,6 +1,6 @@
 {
   "name": "@beeads/charts",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Visualização de dados do design system beeads — wrappers sobre recharts com tokens unificados",
   "license": "MIT",
   "repository": {
@@ -8,8 +8,12 @@
     "url": "https://github.com/gucancado/beeads-ui",
     "directory": "packages/charts"
   },
-  "publishConfig": { "access": "public" },
-  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -21,7 +25,9 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "tsup && node ../../scripts/copy-assets.mjs charts styles.css",
     "typecheck": "tsc --noEmit",
