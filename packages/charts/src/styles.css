@@ -1,0 +1,16 @@
+/* Ajustes leves para recharts dentro do design system beeads */
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+
+.recharts-cartesian-axis-tick text,
+.recharts-legend-item-text {
+  fill: var(--color-muted-fg) !important;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.recharts-cartesian-grid line {
+  stroke: var(--color-border);
+  opacity: 0.5;
+}
