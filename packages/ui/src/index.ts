@@ -138,3 +138,7 @@ export { ScrollArea } from "./components/scroll-area";
 export { Spinner } from "./components/spinner";
 export { Empty, EmptyDescription, EmptyIcon, EmptyTitle } from "./components/empty";
 export { Progress } from "./components/progress";
+
+// Calendar + DatePicker
+export { Calendar, type CalendarProps } from "./components/calendar";
+export { DatePicker } from "./components/date-picker";
