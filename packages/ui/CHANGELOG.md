@@ -1,5 +1,11 @@
 # @beeads/ui
 
+## 0.2.0
+
+### Minor Changes
+
+- Add `ThemeToggle` component — pre-built button with Sun/Moon icons that toggles light/dark theme via `next-themes`. Replaces local implementations in consumer apps.
+
 ## 0.1.0
 
 ### Minor Changes

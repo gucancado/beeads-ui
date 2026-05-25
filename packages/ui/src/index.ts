@@ -142,3 +142,6 @@ export { Progress } from "./components/progress";
 // Calendar + DatePicker
 export { Calendar, type CalendarProps } from "./components/calendar";
 export { DatePicker } from "./components/date-picker";
+
+// Theme
+export { ThemeToggle, type ThemeToggleProps } from "./components/theme-toggle";
