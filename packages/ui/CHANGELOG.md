@@ -1,5 +1,15 @@
 # @beeads/ui
 
+## 0.2.1
+
+### Patch Changes
+
+- fix: aplica `z-50` no `Positioner` dos overlays (DropdownMenu, Popover, Tooltip, Select) ao invés do `Popup` interno.
+
+  O `Menu.Positioner` / `Popover.Positioner` / etc. do `@base-ui/react` aplica `transform` no elemento posicionador, criando um stacking context próprio. O `z-50` que antes ficava no `Popup` interno só competia dentro desse contexto — perdendo para qualquer elemento ancestral com z-index numérico (ex: sidebar com `z-20` como flex item, que cria stacking context por causa da regra do Flexbox).
+
+  Mudança não-quebra: a API pública dos componentes (`DropdownMenuContent`, `PopoverContent`, `TooltipContent`, `SelectContent`) permanece idêntica.
+
 ## 0.2.0
 
 ### Minor Changes

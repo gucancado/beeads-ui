@@ -19,11 +19,11 @@ export function PopoverContent({
 }) {
   return (
     <BasePopover.Portal>
-      <BasePopover.Positioner sideOffset={sideOffset} align={align}>
+      <BasePopover.Positioner sideOffset={sideOffset} align={align} className="z-50">
         <BasePopover.Popup
           data-slot="popover-content"
           className={cn(
-            "z-50 w-72 rounded-md border border-border bg-card p-4 text-card-fg shadow-md outline-none",
+            "w-72 rounded-md border border-border bg-card p-4 text-card-fg shadow-md outline-none",
             className,
           )}
           {...props}

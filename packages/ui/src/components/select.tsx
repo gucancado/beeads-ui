@@ -40,11 +40,11 @@ export function SelectContent({
 }: ComponentProps<typeof BaseSelect.Popup>) {
   return (
     <BaseSelect.Portal>
-      <BaseSelect.Positioner sideOffset={4}>
+      <BaseSelect.Positioner sideOffset={4} className="z-50">
         <BaseSelect.Popup
           data-slot="select-content"
           className={cn(
-            "z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-border bg-card text-card-fg shadow-md",
+            "max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-border bg-card text-card-fg shadow-md",
             className,
           )}
           {...props}

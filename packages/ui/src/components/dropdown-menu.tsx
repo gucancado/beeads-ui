@@ -15,11 +15,11 @@ export function DropdownMenuContent({
 }: ComponentProps<typeof Menu.Popup> & { sideOffset?: number }) {
   return (
     <Menu.Portal>
-      <Menu.Positioner sideOffset={sideOffset}>
+      <Menu.Positioner sideOffset={sideOffset} className="z-50">
         <Menu.Popup
           data-slot="dropdown-menu-content"
           className={cn(
-            "z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-card p-1 text-card-fg shadow-md",
+            "min-w-[8rem] overflow-hidden rounded-md border border-border bg-card p-1 text-card-fg shadow-md",
             className,
           )}
           {...props}
