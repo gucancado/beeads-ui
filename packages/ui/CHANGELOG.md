@@ -1,5 +1,15 @@
 # @beeads/ui
 
+## 0.2.2
+
+### Patch Changes
+
+- fix: o `dist/styles.css` agora declara `@source "./index.{js,mjs}"` no topo, fazendo o Tailwind v4 do consumer escanear automaticamente o bundle do @beeads/ui em busca de classes inline.
+
+  Antes, classes geradas dinamicamente dentro dos componentes — principalmente as variantes `data-[checked]:`, `data-[unchecked]:`, `data-[highlighted]:`, `data-[selected]:`, etc. usadas em Switch, Tabs, DropdownMenu, Combobox — não eram detectadas pelo Tailwind do app consumidor (que por default só escaneia o working tree, não `node_modules`). Resultado visível mais óbvio: toggles do Switch apareciam sempre desativados independente do estado real.
+
+  Com a injeção do `@source` no styles.css, basta o consumidor manter o `@import "@beeads/ui/styles.css"` que tudo passa a funcionar — sem precisar declarar `@source` manualmente no próprio CSS.
+
 ## 0.2.1
 
 ### Patch Changes
