@@ -3,6 +3,7 @@
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import {
   type ComponentProps,
+  type ReactElement,
   type ReactNode,
   createContext,
   useCallback,
@@ -231,10 +232,13 @@ export interface SidebarNavItemProps {
   label: ReactNode;
   icon?: ReactNode;
   active?: boolean;
-  /** Tooltip text shown when collapsed; defaults to `label` if it is a string. */
+  /**
+   * Tooltip text shown when collapsed; defaults to `label` when it is a string.
+   * Required for an accessible name when `label` is a non-string ReactNode and the sidebar can collapse.
+   */
   title?: string;
   /** base-ui render-prop to swap the element for a router Link (e.g. next/link, wouter). */
-  render?: (props: Record<string, unknown>) => ReactNode;
+  render?: (props: Record<string, unknown>) => ReactElement;
   onClick?: () => void;
   className?: string;
 }
@@ -283,7 +287,7 @@ export function SidebarNavItem({
 
   return (
     <Tooltip>
-      <TooltipTrigger render={element as never} />
+      <TooltipTrigger render={element} />
       <TooltipContent side="right">{tip}</TooltipContent>
     </Tooltip>
   );
