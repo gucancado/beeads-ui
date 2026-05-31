@@ -1,7 +1,7 @@
 import { render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Sidebar, SidebarProvider, useSidebar } from "./sidebar";
+import { Sidebar, SidebarHeader, SidebarProvider, useSidebar } from "./sidebar";
 
 // ---------- Harness ----------
 
@@ -135,5 +135,40 @@ describe("SidebarProvider behavior", () => {
     await userEvent.click(screen.getByRole("button"));
 
     expect(localStorage.getItem(TEST_KEY)).toBeNull();
+  });
+});
+
+// ---------- SidebarHeader ----------
+
+describe("SidebarHeader", () => {
+  it("shows the title when expanded", () => {
+    render(
+      <SidebarProvider>
+        <SidebarHeader logo={<svg data-testid="logo" />} title="bloquim" />
+      </SidebarProvider>,
+    );
+    expect(screen.getByText("bloquim")).toBeInTheDocument();
+    expect(screen.getByTestId("logo")).toBeInTheDocument();
+  });
+
+  it("hides the title but keeps the logo when collapsed", () => {
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarHeader logo={<svg data-testid="logo" />} title="bloquim" />
+      </SidebarProvider>,
+    );
+    expect(screen.queryByText("bloquim")).not.toBeInTheDocument();
+    expect(screen.getByTestId("logo")).toBeInTheDocument();
+  });
+
+  it("toggles collapsed state when the toggle button is clicked", async () => {
+    const onChange = vi.fn();
+    render(
+      <SidebarProvider collapsed={false} onCollapsedChange={onChange}>
+        <SidebarHeader logo={<svg />} title="bloquim" />
+      </SidebarProvider>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "recolher menu" }));
+    expect(onChange).toHaveBeenCalledWith(true);
   });
 });

@@ -1,5 +1,6 @@
 "use client";
 
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import {
   type ComponentProps,
   type ReactNode,
@@ -11,6 +12,7 @@ import {
   useState,
 } from "react";
 import { cn } from "../lib/utils";
+import { ThemeToggle } from "./theme-toggle";
 import { TooltipProvider } from "./tooltip";
 
 // ---------- Context ----------
@@ -141,5 +143,54 @@ export function Sidebar({ className, children, ...props }: ComponentProps<"aside
     >
       {children}
     </aside>
+  );
+}
+
+// ---------- SidebarHeader ----------
+
+export interface SidebarHeaderProps {
+  /** Logo element (always visible). SVG/icon recommended. */
+  logo: ReactNode;
+  /** App title (hidden when collapsed). */
+  title?: ReactNode;
+  /** Hide the built-in theme toggle. */
+  hideThemeToggle?: boolean;
+}
+
+export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderProps) {
+  const { collapsed, toggle } = useSidebar();
+  return (
+    <div
+      data-slot="sidebar-header"
+      className={cn(
+        "min-h-[65px] border-b border-sidebar-border/50 p-4 pr-3",
+        collapsed ? "flex flex-col items-center gap-2" : "flex items-center gap-2",
+      )}
+    >
+      <div className={cn("flex min-w-0 items-center gap-3", !collapsed && "flex-1")}>
+        <span className="shrink-0 text-primary [&_svg]:h-6 [&_svg]:w-6">{logo}</span>
+        {!collapsed && title && (
+          <span className="truncate font-display text-xl font-medium tracking-tight text-sidebar-foreground">
+            {title}
+          </span>
+        )}
+      </div>
+      <div className={cn("flex items-center gap-1", collapsed && "flex-col")}>
+        {!hideThemeToggle && <ThemeToggle />}
+        <button
+          type="button"
+          onClick={toggle}
+          title={collapsed ? "expandir menu" : "recolher menu"}
+          aria-label={collapsed ? "expandir menu" : "recolher menu"}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+        >
+          {collapsed ? (
+            <PanelLeftOpen className="h-4 w-4" />
+          ) : (
+            <PanelLeftClose className="h-4 w-4" />
+          )}
+        </button>
+      </div>
+    </div>
   );
 }
