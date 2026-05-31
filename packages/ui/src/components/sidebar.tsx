@@ -1,14 +1,14 @@
 "use client";
 
 import {
+  type ComponentProps,
+  type ReactNode,
   createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
-  type ComponentProps,
-  type ReactNode,
 } from "react";
 import { cn } from "../lib/utils";
 import { TooltipProvider } from "./tooltip";
@@ -89,11 +89,11 @@ export function SidebarProvider({
   const [internal, setInternal] = useState(defaultCollapsed);
 
   // Sync from persisted value after mount (avoids SSR hydration mismatch).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: run-once mount seed of persisted collapse state
   useEffect(() => {
     if (isControlled || persist === "none") return;
     const persisted = readPersisted(persist, storageKey);
     if (persisted !== null) setInternal(persisted);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const collapsed = isControlled ? (controlledCollapsed as boolean) : internal;
