@@ -135,6 +135,22 @@ export {
 } from "./components/pagination";
 export { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./components/collapsible";
 export { ScrollArea } from "./components/scroll-area";
+export {
+  Sidebar,
+  SidebarBody,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarNavItem,
+  SidebarProvider,
+  SidebarSectionLabel,
+  useSidebar,
+  type SidebarFooterProps,
+  type SidebarHeaderProps,
+  type SidebarNavItemProps,
+  type SidebarProviderProps,
+  type SidebarSettingsItem,
+  type SidebarUser,
+} from "./components/sidebar";
 export { Spinner } from "./components/spinner";
 export { Empty, EmptyDescription, EmptyIcon, EmptyTitle } from "./components/empty";
 export { Progress } from "./components/progress";
