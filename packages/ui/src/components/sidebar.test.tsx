@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   Sidebar,
   SidebarBody,
+  SidebarFooter,
   SidebarHeader,
   SidebarNavItem,
   SidebarProvider,
@@ -258,5 +259,63 @@ describe("SidebarNavItem", () => {
     );
     await userEvent.click(screen.getByRole("button", { name: "Tarefas" }));
     expect(onClick).toHaveBeenCalledOnce();
+  });
+});
+
+// ---------- SidebarFooter ----------
+
+describe("SidebarFooter", () => {
+  const user = { name: "Gustavo", email: "g@beeads.com.br", avatarUrl: null };
+
+  it("renders the user name and email when expanded", () => {
+    render(
+      <SidebarProvider>
+        <SidebarFooter user={user} onLogout={vi.fn()} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByText("Gustavo")).toBeInTheDocument();
+    expect(screen.getByText("g@beeads.com.br")).toBeInTheDocument();
+  });
+
+  it("fires onLogout when the logout button is clicked", async () => {
+    const onLogout = vi.fn();
+    render(
+      <SidebarProvider>
+        <SidebarFooter user={user} onLogout={onLogout} />
+      </SidebarProvider>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "sair" }));
+    expect(onLogout).toHaveBeenCalledOnce();
+  });
+
+  it("renders the settings button only when there are items", () => {
+    const { rerender } = render(
+      <SidebarProvider>
+        <SidebarFooter user={user} onLogout={vi.fn()} />
+      </SidebarProvider>,
+    );
+    expect(screen.queryByRole("button", { name: "configurações" })).not.toBeInTheDocument();
+
+    rerender(
+      <SidebarProvider>
+        <SidebarFooter
+          user={user}
+          onLogout={vi.fn()}
+          settingsItems={[{ label: "perfil", onSelect: vi.fn() }]}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "configurações" })).toBeInTheDocument();
+  });
+
+  it("fires onProfileClick when the profile button is clicked", async () => {
+    const onProfileClick = vi.fn();
+    render(
+      <SidebarProvider>
+        <SidebarFooter user={user} onLogout={vi.fn()} onProfileClick={onProfileClick} />
+      </SidebarProvider>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: /editar perfil/i }));
+    expect(onProfileClick).toHaveBeenCalledOnce();
   });
 });

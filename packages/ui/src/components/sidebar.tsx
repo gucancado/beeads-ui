@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { LogOut, PanelLeftClose, PanelLeftOpen, Settings } from "lucide-react";
 import {
   type ComponentProps,
   type ReactElement,
@@ -13,9 +13,20 @@ import {
   useState,
 } from "react";
 import { cn } from "../lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
 import { ScrollArea } from "./scroll-area";
 import { ThemeToggle } from "./theme-toggle";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
+
+// ---------- Shared constants ----------
+
+const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 // ---------- Context ----------
 
@@ -184,7 +195,10 @@ export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderPro
           onClick={toggle}
           title={collapsed ? "expandir menu" : "recolher menu"}
           aria-label={collapsed ? "expandir menu" : "recolher menu"}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+          className={cn(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+            focusRing,
+          )}
         >
           {collapsed ? (
             <PanelLeftOpen className="h-4 w-4" />
@@ -290,5 +304,153 @@ export function SidebarNavItem({
       <TooltipTrigger render={element} />
       <TooltipContent side="right">{tip}</TooltipContent>
     </Tooltip>
+  );
+}
+
+// ---------- SidebarFooter ----------
+
+export interface SidebarUser {
+  name: string;
+  email?: string;
+  avatarUrl?: string | null;
+}
+
+export interface SidebarSettingsItem {
+  label: string;
+  icon?: ReactNode;
+  onSelect?: () => void;
+  /** base-ui render-prop to make the item a router Link instead of a button. */
+  render?: ComponentProps<typeof DropdownMenuItem>["render"];
+}
+
+export interface SidebarFooterProps {
+  user: SidebarUser | null;
+  settingsItems?: SidebarSettingsItem[];
+  onLogout: () => void;
+  /** When provided, the user block becomes a clickable "edit profile" button. */
+  onProfileClick?: () => void;
+}
+
+export function SidebarFooter({
+  user,
+  settingsItems = [],
+  onLogout,
+  onProfileClick,
+}: SidebarFooterProps) {
+  const { collapsed } = useSidebar();
+
+  const avatar = (
+    <Avatar className={collapsed ? "h-10 w-10" : "h-9 w-9"}>
+      {user?.avatarUrl ? <AvatarImage src={user.avatarUrl} alt={user.name} /> : null}
+      <AvatarFallback className="bg-primary/20 text-sm font-bold text-primary">
+        {user?.name?.charAt(0).toUpperCase() ?? "?"}
+      </AvatarFallback>
+    </Avatar>
+  );
+
+  const settingsButton =
+    settingsItems.length > 0 ? (
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={(props) => (
+            <button
+              {...props}
+              type="button"
+              title="configurações"
+              aria-label="configurações"
+              className={cn(
+                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+                focusRing,
+              )}
+            >
+              <Settings className="h-4 w-4" />
+            </button>
+          )}
+        />
+        <DropdownMenuContent className="w-56">
+          {settingsItems.map((item) =>
+            item.render ? (
+              <DropdownMenuItem key={item.label} render={item.render} className="cursor-pointer">
+                {item.icon && <span className="mr-2 [&_svg]:h-4 [&_svg]:w-4">{item.icon}</span>}
+                {item.label}
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem key={item.label} onClick={item.onSelect} className="cursor-pointer">
+                {item.icon && <span className="mr-2 [&_svg]:h-4 [&_svg]:w-4">{item.icon}</span>}
+                {item.label}
+              </DropdownMenuItem>
+            ),
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ) : null;
+
+  const logoutButton = (
+    <button
+      type="button"
+      title="sair"
+      aria-label="sair"
+      onClick={onLogout}
+      className={cn(
+        "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-destructive/10 hover:text-destructive",
+        focusRing,
+      )}
+    >
+      <LogOut className="h-4 w-4" />
+    </button>
+  );
+
+  if (collapsed) {
+    return (
+      <div data-slot="sidebar-footer" className="border-t border-sidebar-border/50 p-2">
+        <div className="flex flex-col items-center gap-2">
+          <button
+            type="button"
+            onClick={onProfileClick}
+            disabled={!onProfileClick}
+            title={user ? `${user.name}${onProfileClick ? " · editar perfil" : ""}` : undefined}
+            aria-label={onProfileClick ? "editar perfil" : undefined}
+            className={cn(
+              "h-10 w-10 shrink-0 rounded-full transition-all hover:ring-2 hover:ring-primary/40 disabled:hover:ring-0",
+              focusRing,
+            )}
+          >
+            {avatar}
+          </button>
+          {settingsButton}
+          {logoutButton}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div data-slot="sidebar-footer" className="border-t border-sidebar-border/50 p-4">
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onProfileClick}
+          disabled={!onProfileClick}
+          title={onProfileClick ? "editar perfil" : undefined}
+          aria-label={onProfileClick ? "editar perfil" : undefined}
+          className={cn(
+            "flex min-w-0 flex-1 items-center gap-3 rounded-xl px-2 py-3 text-left transition-colors hover:bg-sidebar-accent/50 disabled:hover:bg-transparent",
+            focusRing,
+          )}
+        >
+          {avatar}
+          <div className="flex-1 overflow-hidden">
+            <p className="truncate text-sm font-medium text-sidebar-foreground">
+              {user?.name ?? ""}
+            </p>
+            {user?.email && (
+              <p className="truncate text-xs text-sidebar-foreground/50">{user.email}</p>
+            )}
+          </div>
+        </button>
+        {settingsButton}
+        {logoutButton}
+      </div>
+    </div>
   );
 }
