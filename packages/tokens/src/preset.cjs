@@ -43,6 +43,13 @@ module.exports = {
           DEFAULT: "var(--color-destructive)",
           fg: "var(--color-destructive-fg)",
         },
+        sidebar: {
+          DEFAULT: "var(--color-sidebar)",
+          foreground: "var(--color-sidebar-foreground)",
+          border: "var(--color-sidebar-border)",
+          accent: "var(--color-sidebar-accent)",
+          "accent-foreground": "var(--color-sidebar-accent-foreground)",
+        },
         "chart-1": "var(--color-chart-1)",
         "chart-2": "var(--color-chart-2)",
         "chart-3": "var(--color-chart-3)",

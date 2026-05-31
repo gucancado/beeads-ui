@@ -35,6 +35,13 @@
   --color-destructive: var(--color-err);
   --color-destructive-fg: oklch(1 0 0);
 
+  /* Sidebar */
+  --color-sidebar: hsl(210 20% 96.5%);
+  --color-sidebar-foreground: hsl(222 47% 11%);
+  --color-sidebar-border: hsl(214.3 31.8% 88%);
+  --color-sidebar-accent: hsl(0 0% 100%);
+  --color-sidebar-accent-foreground: hsl(222 47% 11%);
+
   /* Paleta categórica para charts */
   --color-chart-1: var(--color-honey);
   --color-chart-2: oklch(0.58 0.13 240);
@@ -75,6 +82,11 @@
   --color-secondary: oklch(0.28 0 0);
   --color-secondary-fg: oklch(0.96 0 0);
   --color-accent-fg: var(--color-ink);
+  --color-sidebar: hsl(0 0% 7.8%);
+  --color-sidebar-foreground: hsl(210 40% 98%);
+  --color-sidebar-border: hsl(215 28% 15%);
+  --color-sidebar-accent: hsl(0 0% 13.7%);
+  --color-sidebar-accent-foreground: hsl(210 40% 98%);
 }
 
 /* Tailwind v4: @theme inline expõe as vars como classes utilitárias */
@@ -106,6 +118,11 @@
   --color-secondary-fg: var(--color-secondary-fg);
   --color-destructive: var(--color-destructive);
   --color-destructive-fg: var(--color-destructive-fg);
+  --color-sidebar: var(--color-sidebar);
+  --color-sidebar-foreground: var(--color-sidebar-foreground);
+  --color-sidebar-border: var(--color-sidebar-border);
+  --color-sidebar-accent: var(--color-sidebar-accent);
+  --color-sidebar-accent-foreground: var(--color-sidebar-accent-foreground);
   --color-chart-1: var(--color-chart-1);
   --color-chart-2: var(--color-chart-2);
   --color-chart-3: var(--color-chart-3);
