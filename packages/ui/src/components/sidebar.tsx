@@ -14,7 +14,7 @@ import {
 import { cn } from "../lib/utils";
 import { ScrollArea } from "./scroll-area";
 import { ThemeToggle } from "./theme-toggle";
-import { TooltipProvider } from "./tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
 // ---------- Context ----------
 
@@ -222,5 +222,69 @@ export function SidebarSectionLabel({ className, children, ...props }: Component
     >
       {children}
     </p>
+  );
+}
+
+// ---------- SidebarNavItem ----------
+
+export interface SidebarNavItemProps {
+  label: ReactNode;
+  icon?: ReactNode;
+  active?: boolean;
+  /** Tooltip text shown when collapsed; defaults to `label` if it is a string. */
+  title?: string;
+  /** base-ui render-prop to swap the element for a router Link (e.g. next/link, wouter). */
+  render?: (props: Record<string, unknown>) => ReactNode;
+  onClick?: () => void;
+  className?: string;
+}
+
+export function SidebarNavItem({
+  label,
+  icon,
+  active = false,
+  title,
+  render,
+  onClick,
+  className,
+}: SidebarNavItemProps) {
+  const { collapsed } = useSidebar();
+
+  const classes = cn(
+    "flex items-center gap-3 rounded-xl transition-all duration-200 cursor-pointer",
+    collapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5",
+    active
+      ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm"
+      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+    className,
+  );
+
+  const inner = (
+    <>
+      {icon && <span className="shrink-0 [&_svg]:h-5 [&_svg]:w-5">{icon}</span>}
+      {!collapsed && <span className="truncate">{label}</span>}
+    </>
+  );
+
+  const elementProps: Record<string, unknown> = {
+    className: classes,
+    "data-slot": "sidebar-nav-item",
+    "data-active": active || undefined,
+    onClick,
+    children: inner,
+  };
+
+  const element = render ? render(elementProps) : <button type="button" {...elementProps} />;
+
+  if (!collapsed) return element;
+
+  const tip = title ?? (typeof label === "string" ? label : undefined);
+  if (!tip) return element;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger render={element as never} />
+      <TooltipContent side="right">{tip}</TooltipContent>
+    </Tooltip>
   );
 }

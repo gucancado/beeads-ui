@@ -5,6 +5,7 @@ import {
   Sidebar,
   SidebarBody,
   SidebarHeader,
+  SidebarNavItem,
   SidebarProvider,
   SidebarSectionLabel,
   useSidebar,
@@ -214,5 +215,48 @@ describe("SidebarHeader", () => {
     );
     await userEvent.click(screen.getByRole("button", { name: "recolher menu" }));
     expect(onChange).toHaveBeenCalledWith(true);
+  });
+});
+
+// ---------- SidebarNavItem ----------
+
+describe("SidebarNavItem", () => {
+  it("applies the active styling", () => {
+    render(
+      <SidebarProvider>
+        <SidebarNavItem label="Tarefas" active />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "Tarefas" })).toHaveClass("bg-sidebar-accent");
+  });
+
+  it("renders as a link via the render prop", () => {
+    render(
+      <SidebarProvider>
+        <SidebarNavItem label="Tarefas" render={(props) => <a href="/my-tasks" {...props} />} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("link", { name: "Tarefas" })).toHaveAttribute("href", "/my-tasks");
+  });
+
+  it("hides the label when collapsed", () => {
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarNavItem label="Tarefas" icon={<svg />} title="Tarefas" />
+      </SidebarProvider>,
+    );
+    // The trigger button has no visible label text when collapsed.
+    expect(screen.getByRole("button")).not.toHaveTextContent("Tarefas");
+  });
+
+  it("fires onClick", async () => {
+    const onClick = vi.fn();
+    render(
+      <SidebarProvider>
+        <SidebarNavItem label="Tarefas" onClick={onClick} />
+      </SidebarProvider>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Tarefas" }));
+    expect(onClick).toHaveBeenCalledOnce();
   });
 });
