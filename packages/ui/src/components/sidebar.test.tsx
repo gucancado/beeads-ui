@@ -1,7 +1,14 @@
 import { render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Sidebar, SidebarHeader, SidebarProvider, useSidebar } from "./sidebar";
+import {
+  Sidebar,
+  SidebarBody,
+  SidebarHeader,
+  SidebarProvider,
+  SidebarSectionLabel,
+  useSidebar,
+} from "./sidebar";
 
 // ---------- Harness ----------
 
@@ -135,6 +142,43 @@ describe("SidebarProvider behavior", () => {
     await userEvent.click(screen.getByRole("button"));
 
     expect(localStorage.getItem(TEST_KEY)).toBeNull();
+  });
+});
+
+// ---------- SidebarBody ----------
+
+describe("SidebarBody", () => {
+  it("renders its children", () => {
+    render(
+      <SidebarProvider>
+        <SidebarBody>
+          <span>miolo</span>
+        </SidebarBody>
+      </SidebarProvider>,
+    );
+    expect(screen.getByText("miolo")).toBeInTheDocument();
+  });
+});
+
+// ---------- SidebarSectionLabel ----------
+
+describe("SidebarSectionLabel", () => {
+  it("renders the label when expanded", () => {
+    render(
+      <SidebarProvider>
+        <SidebarSectionLabel>Agentes</SidebarSectionLabel>
+      </SidebarProvider>,
+    );
+    expect(screen.getByText("Agentes")).toBeInTheDocument();
+  });
+
+  it("renders nothing when collapsed", () => {
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarSectionLabel>Agentes</SidebarSectionLabel>
+      </SidebarProvider>,
+    );
+    expect(screen.queryByText("Agentes")).not.toBeInTheDocument();
   });
 });
 

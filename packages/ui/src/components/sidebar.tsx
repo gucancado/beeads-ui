@@ -12,6 +12,7 @@ import {
   useState,
 } from "react";
 import { cn } from "../lib/utils";
+import { ScrollArea } from "./scroll-area";
 import { ThemeToggle } from "./theme-toggle";
 import { TooltipProvider } from "./tooltip";
 
@@ -192,5 +193,34 @@ export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderPro
         </button>
       </div>
     </div>
+  );
+}
+
+// ---------- SidebarBody ----------
+
+export function SidebarBody({ className, children, ...props }: ComponentProps<typeof ScrollArea>) {
+  return (
+    <ScrollArea data-slot="sidebar-body" className={cn("flex-1 px-2 py-4", className)} {...props}>
+      {children}
+    </ScrollArea>
+  );
+}
+
+// ---------- SidebarSectionLabel ----------
+
+export function SidebarSectionLabel({ className, children, ...props }: ComponentProps<"p">) {
+  const { collapsed } = useSidebar();
+  if (collapsed) return null;
+  return (
+    <p
+      data-slot="sidebar-section-label"
+      className={cn(
+        "mb-2 px-3 text-[10px] font-normal uppercase tracking-[0.22em] text-sidebar-foreground/50",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </p>
   );
 }
