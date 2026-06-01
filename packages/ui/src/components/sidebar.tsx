@@ -254,6 +254,8 @@ export interface SidebarNavItemProps {
   /** base-ui render-prop to swap the element for a router Link (e.g. next/link, wouter). */
   render?: (props: Record<string, unknown>) => ReactElement;
   onClick?: () => void;
+  /** Optional badge/indicator. Rendered after the label when expanded; as a small bubble over the icon when collapsed. */
+  badge?: ReactNode;
   className?: string;
 }
 
@@ -264,12 +266,13 @@ export function SidebarNavItem({
   title,
   render,
   onClick,
+  badge,
   className,
 }: SidebarNavItemProps) {
   const { collapsed } = useSidebar();
 
   const classes = cn(
-    "flex items-center gap-3 rounded-xl transition-all duration-200 cursor-pointer",
+    "relative flex items-center gap-3 rounded-xl transition-all duration-200 cursor-pointer",
     collapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5",
     active
       ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm"
@@ -281,6 +284,10 @@ export function SidebarNavItem({
     <>
       {icon && <span className="shrink-0 [&_svg]:h-5 [&_svg]:w-5">{icon}</span>}
       {!collapsed && <span className="truncate">{label}</span>}
+      {!collapsed && badge ? <span className="ml-auto shrink-0">{badge}</span> : null}
+      {collapsed && badge ? (
+        <span className="absolute -right-0.5 -top-0.5 origin-top-right scale-90">{badge}</span>
+      ) : null}
     </>
   );
 

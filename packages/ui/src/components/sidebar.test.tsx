@@ -260,6 +260,26 @@ describe("SidebarNavItem", () => {
     await userEvent.click(screen.getByRole("button", { name: "Tarefas" }));
     expect(onClick).toHaveBeenCalledOnce();
   });
+
+  it("renders the badge when expanded", () => {
+    render(
+      <SidebarProvider>
+        <SidebarNavItem label="Alertas" badge={<span>3</span>} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByText("3")).toBeInTheDocument();
+  });
+
+  it("still renders the badge (as a bubble) when collapsed", () => {
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarNavItem label="Alertas" icon={<svg />} title="Alertas" badge={<span>3</span>} />
+      </SidebarProvider>,
+    );
+    // label hidden, but badge content stays visible as a bubble over the icon
+    expect(screen.getByText("3")).toBeInTheDocument();
+    expect(screen.getByRole("button")).not.toHaveTextContent("Alertas");
+  });
 });
 
 // ---------- SidebarFooter ----------
