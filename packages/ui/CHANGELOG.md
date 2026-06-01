@@ -1,5 +1,16 @@
 # @beeads/ui
 
+## 0.3.0
+
+### Minor Changes
+
+- 9df3a9b: Adiciona a família Sidebar (`SidebarProvider`, `Sidebar`, `SidebarHeader`, `SidebarBody`, `SidebarFooter`, `SidebarSectionLabel`, `SidebarNavItem`, `useSidebar`) — sidebar de aplicação router-agnóstico e data-injected, padronizando o menu lateral entre os apps beeads.
+
+### Patch Changes
+
+- Updated dependencies [9df3a9b]
+  - @beeads/tokens@0.2.0
+
 ## 0.2.2
 
 ### Patch Changes

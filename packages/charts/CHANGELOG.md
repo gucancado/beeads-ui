@@ -1,5 +1,14 @@
 # @beeads/charts
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [9df3a9b]
+- Updated dependencies [9df3a9b]
+  - @beeads/ui@0.3.0
+  - @beeads/tokens@0.2.0
+
 ## 0.1.3
 
 ### Patch Changes
