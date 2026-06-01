@@ -1,5 +1,11 @@
 # @beeads/ui
 
+## 0.4.0
+
+### Minor Changes
+
+- 3664d70: `SidebarNavItem` agora aceita uma prop opcional `badge` (ReactNode). No estado expandido o badge aparece após o label (alinhado à direita); no estado colapsado vira uma pequena bolha sobre o ícone, mantendo o indicador visível em modo ícone-only (ex.: contador de alertas).
+
 ## 0.3.0
 
 ### Minor Changes
