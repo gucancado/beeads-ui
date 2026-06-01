@@ -1,5 +1,11 @@
 # @beeads/tokens
 
+## 0.2.0
+
+### Minor Changes
+
+- 9df3a9b: Adiciona tokens `--sidebar-*` (sidebar, foreground, border, accent, accent-foreground) com light/dark, expostos no preset Tailwind v3 e no `@theme inline` v4.
+
 ## 0.1.0
 
 ### Minor Changes
