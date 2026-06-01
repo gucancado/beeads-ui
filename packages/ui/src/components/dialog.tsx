@@ -2,7 +2,7 @@
 
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export const Dialog = BaseDialog.Root;
@@ -56,17 +56,11 @@ export function DialogFooter({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-export function DialogTitle({
-  className,
-  ...props
-}: ComponentProps<typeof BaseDialog.Title>) {
+export function DialogTitle({ className, ...props }: ComponentProps<typeof BaseDialog.Title>) {
   return (
     <BaseDialog.Title
       data-slot="dialog-title"
-      className={cn(
-        "font-display text-lg font-semibold leading-none tracking-tight",
-        className,
-      )}
+      className={cn("font-display text-lg font-semibold leading-none tracking-tight", className)}
       {...props}
     />
   );

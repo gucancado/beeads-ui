@@ -1,12 +1,18 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
-import { type ComponentProps } from "react";
-import { type ButtonProps, buttonVariants } from "./button";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
+import { type ButtonProps, buttonVariants } from "./button";
 
 export function Pagination({ className, ...props }: ComponentProps<"nav">) {
-  return <nav role="navigation" aria-label="pagination" className={cn("mx-auto flex w-full justify-center", className)} {...props} />;
+  return (
+    <nav
+      aria-label="pagination"
+      className={cn("mx-auto flex w-full justify-center", className)}
+      {...props}
+    />
+  );
 }
 
 export function PaginationContent({ className, ...props }: ComponentProps<"ul">) {
@@ -52,7 +58,11 @@ export function PaginationNext(props: ComponentProps<typeof PaginationLink>) {
 
 export function PaginationEllipsis({ className, ...props }: ComponentProps<"span">) {
   return (
-    <span aria-hidden className={cn("flex h-9 w-9 items-center justify-center", className)} {...props}>
+    <span
+      aria-hidden
+      className={cn("flex h-9 w-9 items-center justify-center", className)}
+      {...props}
+    >
       <MoreHorizontal className="h-4 w-4" />
       <span className="sr-only">More</span>
     </span>

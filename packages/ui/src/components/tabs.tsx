@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export const Tabs = BaseTabs.Root;

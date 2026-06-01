@@ -2,8 +2,8 @@
 
 import {
   Bar,
-  BarChart as RechartsBarChart,
   CartesianGrid,
+  BarChart as RechartsBarChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,

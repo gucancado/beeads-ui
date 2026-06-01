@@ -17,13 +17,7 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger
-        render={
-          (props) => (
-            <Button {...props}>Abrir Dialog</Button>
-          )
-        }
-      />
+      <DialogTrigger render={(props) => <Button {...props}>Abrir Dialog</Button>} />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Confirmar ação</DialogTitle>

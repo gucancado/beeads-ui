@@ -2,13 +2,10 @@
 
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox";
 import { Check } from "lucide-react";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
-export function Checkbox({
-  className,
-  ...props
-}: ComponentProps<typeof BaseCheckbox.Root>) {
+export function Checkbox({ className, ...props }: ComponentProps<typeof BaseCheckbox.Root>) {
   return (
     <BaseCheckbox.Root
       data-slot="checkbox"

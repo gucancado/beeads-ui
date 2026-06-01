@@ -16,9 +16,16 @@ export function DonutChart({ data, height = 280, formatter = formatters.number }
       <PieChart>
         <Tooltip content={tooltipRenderer(formatter)} />
         <Legend />
-        <Pie data={data} dataKey="value" nameKey="name" innerRadius={60} outerRadius={90} paddingAngle={2}>
-          {data.map((_, i) => (
-            <Cell key={i} fill={chartColor(i)} />
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="name"
+          innerRadius={60}
+          outerRadius={90}
+          paddingAngle={2}
+        >
+          {data.map((entry, i) => (
+            <Cell key={entry.name} fill={chartColor(i)} />
           ))}
         </Pie>
       </PieChart>

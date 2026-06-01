@@ -9,8 +9,9 @@ export function ChartTooltip(props: TooltipProps<ValueType, NameType>) {
   const { active, payload, label } = props;
   // formatter pode vir injetado via factory abaixo
   const formatter =
-    ((props as unknown as { __formatter?: ChartFormatter }).__formatter as ChartFormatter | undefined) ??
-    formatters.number;
+    ((props as unknown as { __formatter?: ChartFormatter }).__formatter as
+      | ChartFormatter
+      | undefined) ?? formatters.number;
 
   if (!active || !payload?.length) return null;
 
@@ -19,7 +20,7 @@ export function ChartTooltip(props: TooltipProps<ValueType, NameType>) {
       {label != null && <p className="mb-1 font-medium text-fg">{String(label)}</p>}
       <div className="space-y-1">
         {payload.map((entry, i) => (
-          <div key={i} className="flex items-center gap-2">
+          <div key={`${entry.dataKey ?? entry.name}-${i}`} className="flex items-center gap-2">
             <span
               className="inline-block h-2 w-2 rounded-full"
               style={{ background: entry.color }}

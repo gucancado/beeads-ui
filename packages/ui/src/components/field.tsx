@@ -1,7 +1,7 @@
 "use client";
 
 import { Field as BaseField } from "@base-ui/react/field";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export function Field({ className, ...props }: ComponentProps<typeof BaseField.Root>) {
@@ -28,7 +28,10 @@ export function FieldControl({ ...props }: ComponentProps<typeof BaseField.Contr
   return <BaseField.Control {...props} />;
 }
 
-export function FieldDescription({ className, ...props }: ComponentProps<typeof BaseField.Description>) {
+export function FieldDescription({
+  className,
+  ...props
+}: ComponentProps<typeof BaseField.Description>) {
   return (
     <BaseField.Description
       data-slot="field-description"

@@ -1,7 +1,7 @@
 "use client";
 
 import { Popover as BasePopover } from "@base-ui/react/popover";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export const Popover = BasePopover.Root;
