@@ -31,7 +31,9 @@ export function ChartFrame({
         </CardHeader>
       )}
       <CardContent>{children}</CardContent>
-      {footer && <div className="border-t border-border px-6 py-3 text-xs text-muted-fg">{footer}</div>}
+      {footer && (
+        <div className="border-t border-border px-6 py-3 text-xs text-muted-fg">{footer}</div>
+      )}
     </Card>
   );
 }

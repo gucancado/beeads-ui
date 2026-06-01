@@ -47,7 +47,9 @@ export function MultiLineChart<T extends Record<string, number | string>>({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xKey as string} />
         <YAxis yAxisId="left" tickFormatter={(v) => leftFormatter(v)} />
-        {hasRight && <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => rightFormatter(v)} />}
+        {hasRight && (
+          <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => rightFormatter(v)} />
+        )}
         <Tooltip content={tooltipRenderer(leftFormatter)} />
         <Legend />
         {series.map((s, i) => (

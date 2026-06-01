@@ -18,7 +18,7 @@ export function FunnelChart({ stages, formatter = formatters.number }: FunnelCha
   return (
     <div className="space-y-3">
       {stages.map((stage, i) => {
-        const prev = i > 0 ? stages[i - 1]!.value : null;
+        const prev = i > 0 ? (stages[i - 1]?.value ?? null) : null;
         const drop = prev ? 1 - stage.value / prev : null;
         const width = (stage.value / max) * 100;
         const dropColor =
@@ -35,9 +35,7 @@ export function FunnelChart({ stages, formatter = formatters.number }: FunnelCha
               <span className="font-medium">{stage.label}</span>
               <div className="flex items-center gap-3">
                 <span>{formatter(stage.value)}</span>
-                {drop != null && (
-                  <span className={dropColor}>↓ {formatters.percent(drop)}</span>
-                )}
+                {drop != null && <span className={dropColor}>↓ {formatters.percent(drop)}</span>}
               </div>
             </div>
             <div className="h-6 w-full overflow-hidden rounded-md bg-muted">

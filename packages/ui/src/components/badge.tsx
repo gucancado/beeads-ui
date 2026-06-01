@@ -1,7 +1,7 @@
 "use client";
 
 import { type VariantProps, cva } from "class-variance-authority";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 const badgeVariants = cva(
@@ -26,9 +26,7 @@ const badgeVariants = cva(
   },
 );
 
-export interface BadgeProps
-  extends ComponentProps<"div">,
-    VariantProps<typeof badgeVariants> {}
+export interface BadgeProps extends ComponentProps<"div">, VariantProps<typeof badgeVariants> {}
 
 export function Badge({ className, variant, ...props }: BadgeProps) {
   return <div data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />;

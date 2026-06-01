@@ -2,14 +2,11 @@
 
 import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "lucide-react";
-import { type ComponentProps, type ReactNode } from "react";
-import { Dialog, DialogContent } from "./dialog";
+import type { ComponentProps, ReactNode } from "react";
 import { cn } from "../lib/utils";
+import { Dialog, DialogContent } from "./dialog";
 
-export function Command({
-  className,
-  ...props
-}: ComponentProps<typeof CommandPrimitive>) {
+export function Command({ className, ...props }: ComponentProps<typeof CommandPrimitive>) {
   return (
     <CommandPrimitive
       data-slot="command"
@@ -54,10 +51,7 @@ export function CommandInput({
   );
 }
 
-export function CommandList({
-  className,
-  ...props
-}: ComponentProps<typeof CommandPrimitive.List>) {
+export function CommandList({ className, ...props }: ComponentProps<typeof CommandPrimitive.List>) {
   return (
     <CommandPrimitive.List
       data-slot="command-list"
@@ -67,9 +61,7 @@ export function CommandList({
   );
 }
 
-export function CommandEmpty(
-  props: ComponentProps<typeof CommandPrimitive.Empty>,
-) {
+export function CommandEmpty(props: ComponentProps<typeof CommandPrimitive.Empty>) {
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
@@ -95,10 +87,7 @@ export function CommandGroup({
   );
 }
 
-export function CommandItem({
-  className,
-  ...props
-}: ComponentProps<typeof CommandPrimitive.Item>) {
+export function CommandItem({ className, ...props }: ComponentProps<typeof CommandPrimitive.Item>) {
   return (
     <CommandPrimitive.Item
       data-slot="command-item"

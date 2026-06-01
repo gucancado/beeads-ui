@@ -1,13 +1,10 @@
 "use client";
 
 import { Slider as BaseSlider } from "@base-ui/react/slider";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
-export function Slider({
-  className,
-  ...props
-}: ComponentProps<typeof BaseSlider.Root>) {
+export function Slider({ className, ...props }: ComponentProps<typeof BaseSlider.Root>) {
   return (
     <BaseSlider.Root
       data-slot="slider"

@@ -1,13 +1,10 @@
 "use client";
 
 import { Progress as BaseProgress } from "@base-ui/react/progress";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
-export function Progress({
-  className,
-  ...props
-}: ComponentProps<typeof BaseProgress.Root>) {
+export function Progress({ className, ...props }: ComponentProps<typeof BaseProgress.Root>) {
   return (
     <BaseProgress.Root
       data-slot="progress"

@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar as BaseAvatar } from "@base-ui/react/avatar";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export function Avatar({ className, ...props }: ComponentProps<typeof BaseAvatar.Root>) {
@@ -24,7 +24,10 @@ export function AvatarImage({ className, ...props }: ComponentProps<typeof BaseA
   );
 }
 
-export function AvatarFallback({ className, ...props }: ComponentProps<typeof BaseAvatar.Fallback>) {
+export function AvatarFallback({
+  className,
+  ...props
+}: ComponentProps<typeof BaseAvatar.Fallback>) {
   return (
     <BaseAvatar.Fallback
       data-slot="avatar-fallback"

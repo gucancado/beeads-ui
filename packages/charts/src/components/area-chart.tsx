@@ -2,8 +2,8 @@
 
 import {
   Area,
-  AreaChart as RechartsAreaChart,
   CartesianGrid,
+  AreaChart as RechartsAreaChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -35,7 +35,10 @@ export function AreaChart<T extends Record<string, number | string>>({
             <linearGradient
               key={s.key as string}
               id={`grad-${s.key as string}`}
-              x1="0" y1="0" x2="0" y2="1"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
             >
               <stop offset="5%" stopColor={chartColor(i)} stopOpacity={0.4} />
               <stop offset="95%" stopColor={chartColor(i)} stopOpacity={0} />

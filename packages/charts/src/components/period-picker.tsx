@@ -1,16 +1,10 @@
 "use client";
 
+import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from "@beeads/ui";
 import { addDays, format, startOfMonth, subDays, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useState } from "react";
-import {
-  Button,
-  Calendar,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@beeads/ui";
 
 export interface PeriodValue {
   from: Date;
@@ -47,7 +41,8 @@ export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
         render={
           <Button variant="outline" className="gap-2 font-normal">
             <CalendarIcon className="h-4 w-4" />
-            {format(value.from, "d MMM", { locale: ptBR })} – {format(value.to, "d MMM y", { locale: ptBR })}
+            {format(value.from, "d MMM", { locale: ptBR })} –{" "}
+            {format(value.to, "d MMM y", { locale: ptBR })}
           </Button>
         }
       />

@@ -1,7 +1,7 @@
 "use client";
 
 import { Drawer as BaseDrawer } from "@base-ui/react/drawer";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export const Drawer = BaseDrawer.Root;
@@ -51,10 +51,7 @@ export function DrawerFooter({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-export function DrawerTitle({
-  className,
-  ...props
-}: ComponentProps<typeof BaseDrawer.Title>) {
+export function DrawerTitle({ className, ...props }: ComponentProps<typeof BaseDrawer.Title>) {
   return (
     <BaseDrawer.Title
       data-slot="drawer-title"

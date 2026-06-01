@@ -3,38 +3,30 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import { type VariantProps, cva } from "class-variance-authority";
 import { X } from "lucide-react";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export const Sheet = BaseDialog.Root;
 export const SheetTrigger = BaseDialog.Trigger;
 export const SheetClose = BaseDialog.Close;
 
-const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-card p-6 shadow-lg border-border",
-  {
-    variants: {
-      side: {
-        top: "inset-x-0 top-0 border-b",
-        bottom: "inset-x-0 bottom-0 border-t",
-        left: "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
-        right: "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
-      },
+const sheetVariants = cva("fixed z-50 gap-4 bg-card p-6 shadow-lg border-border", {
+  variants: {
+    side: {
+      top: "inset-x-0 top-0 border-b",
+      bottom: "inset-x-0 bottom-0 border-t",
+      left: "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+      right: "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
     },
-    defaultVariants: { side: "right" },
   },
-);
+  defaultVariants: { side: "right" },
+});
 
 interface SheetContentProps
   extends ComponentProps<typeof BaseDialog.Popup>,
     VariantProps<typeof sheetVariants> {}
 
-export function SheetContent({
-  side,
-  className,
-  children,
-  ...props
-}: SheetContentProps) {
+export function SheetContent({ side, className, children, ...props }: SheetContentProps) {
   return (
     <BaseDialog.Portal>
       <BaseDialog.Backdrop className="fixed inset-0 z-50 bg-black/50" />
@@ -73,10 +65,7 @@ export function SheetFooter({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-export function SheetTitle({
-  className,
-  ...props
-}: ComponentProps<typeof BaseDialog.Title>) {
+export function SheetTitle({ className, ...props }: ComponentProps<typeof BaseDialog.Title>) {
   return (
     <BaseDialog.Title
       data-slot="sheet-title"

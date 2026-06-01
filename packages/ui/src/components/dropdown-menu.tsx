@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu } from "@base-ui/react/menu";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export const DropdownMenu = Menu.Root;
@@ -31,10 +31,7 @@ export function DropdownMenuContent({
   );
 }
 
-export function DropdownMenuItem({
-  className,
-  ...props
-}: ComponentProps<typeof Menu.Item>) {
+export function DropdownMenuItem({ className, ...props }: ComponentProps<typeof Menu.Item>) {
   return (
     <Menu.Item
       data-slot="dropdown-menu-item"
