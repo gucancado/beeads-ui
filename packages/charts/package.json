@@ -27,7 +27,7 @@
   "scripts": {
     "build": "tsup && node ../../scripts/copy-assets.mjs charts styles.css",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
     "react": ">=18",
