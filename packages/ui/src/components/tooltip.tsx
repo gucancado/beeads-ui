@@ -1,7 +1,7 @@
 "use client";
 
 import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 export const TooltipProvider = BaseTooltip.Provider;
@@ -11,11 +11,15 @@ export const TooltipTrigger = BaseTooltip.Trigger;
 export function TooltipContent({
   className,
   sideOffset = 4,
+  side,
   ...props
-}: ComponentProps<typeof BaseTooltip.Popup> & { sideOffset?: number }) {
+}: ComponentProps<typeof BaseTooltip.Popup> & {
+  sideOffset?: number;
+  side?: "top" | "right" | "bottom" | "left";
+}) {
   return (
     <BaseTooltip.Portal>
-      <BaseTooltip.Positioner sideOffset={sideOffset} className="z-50">
+      <BaseTooltip.Positioner sideOffset={sideOffset} side={side} className="z-50">
         <BaseTooltip.Popup
           data-slot="tooltip-content"
           className={cn(
