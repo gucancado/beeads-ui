@@ -205,11 +205,13 @@ export interface SidebarHeaderProps {
   logo: ReactNode;
   /** App title (hidden when collapsed). */
   title?: ReactNode;
-  /** Hide the built-in theme toggle. */
+  /** Hide the built-in theme toggle. Wins over `themeToggle`. */
   hideThemeToggle?: boolean;
+  /** Custom node rendered in place of the default `<ThemeToggle />`. Ignored when `hideThemeToggle`. */
+  themeToggle?: ReactNode;
 }
 
-export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderProps) {
+export function SidebarHeader({ logo, title, hideThemeToggle, themeToggle }: SidebarHeaderProps) {
   const { collapsed, toggle, labels, collapsible } = useSidebar();
   const toggleLabel = collapsed ? labels.expand : labels.collapse;
   return (
@@ -229,7 +231,7 @@ export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderPro
         )}
       </div>
       <div className={cn("flex items-center gap-1", collapsed && "flex-col")}>
-        {!hideThemeToggle && <ThemeToggle />}
+        {!hideThemeToggle && (themeToggle ?? <ThemeToggle />)}
         {collapsible && (
           <button
             type="button"

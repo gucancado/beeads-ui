@@ -238,6 +238,35 @@ describe("SidebarHeader", () => {
     expect(screen.queryByRole("button", { name: "recolher menu" })).toBeNull();
   });
 
+  it("renders a custom themeToggle node in place of the default", () => {
+    render(
+      <SidebarProvider>
+        <SidebarHeader
+          logo={<svg />}
+          title="bloquim"
+          themeToggle={<button type="button">custom-theme</button>}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "custom-theme" })).toBeInTheDocument();
+    // default ThemeToggle (aria-label "Mudar para tema ...") should be absent
+    expect(screen.queryByRole("button", { name: /mudar para tema/i })).toBeNull();
+  });
+
+  it("renders nothing for theme toggle when hideThemeToggle wins over themeToggle", () => {
+    render(
+      <SidebarProvider>
+        <SidebarHeader
+          logo={<svg />}
+          title="bloquim"
+          hideThemeToggle
+          themeToggle={<button type="button">custom-theme</button>}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.queryByRole("button", { name: "custom-theme" })).toBeNull();
+  });
+
   it("toggles collapsed state when the toggle button is clicked", async () => {
     const onChange = vi.fn();
     render(
