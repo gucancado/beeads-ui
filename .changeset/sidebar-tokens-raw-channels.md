@@ -1,5 +1,5 @@
 ---
-"@beeads/tokens": major
+"@beeads/tokens": minor
 ---
 
 Sidebar tokens (`--color-sidebar`, `--color-sidebar-foreground`, `--color-sidebar-border`, `--color-sidebar-accent`, `--color-sidebar-accent-foreground`) now hold **raw HSL channels** (e.g. `210 20% 96.5%`) instead of full `hsl(...)` values. This makes opacity modifiers (`bg-sidebar-accent/50`, `text-sidebar-foreground/70`) work in **both** Tailwind v3 and v4 from a single source — consumer apps no longer need local raw-channel overrides.

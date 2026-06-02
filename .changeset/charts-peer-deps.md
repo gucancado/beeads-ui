@@ -1,5 +1,5 @@
 ---
-"@beeads/charts": major
+"@beeads/charts": minor
 ---
 
 `@beeads/tokens` and `@beeads/ui` are now **peerDependencies** instead of regular dependencies. This ensures the consuming app's single installed copy of the design system is used, preventing duplicate/conflicting `@beeads/tokens` instances (and mismatched CSS variables) when an app uses both `@beeads/charts` and `@beeads/ui`.
