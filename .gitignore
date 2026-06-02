@@ -9,3 +9,7 @@ storybook-static/
 .vscode/
 .idea/
 coverage/
+
+# debug/screenshot artifacts
+.playwright-mcp/
+bloquim-1.png
