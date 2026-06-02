@@ -213,10 +213,15 @@ export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderPro
 
 // ---------- SidebarBody ----------
 
-export function SidebarBody({ className, children, ...props }: ComponentProps<typeof ScrollArea>) {
+export function SidebarBody({
+  className,
+  children,
+  "aria-label": ariaLabel = "Navegação principal",
+  ...props
+}: ComponentProps<typeof ScrollArea> & { "aria-label"?: string }) {
   return (
     <ScrollArea data-slot="sidebar-body" className={cn("flex-1 px-2 py-4", className)} {...props}>
-      {children}
+      <nav aria-label={ariaLabel}>{children}</nav>
     </ScrollArea>
   );
 }

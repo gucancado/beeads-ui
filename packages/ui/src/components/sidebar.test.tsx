@@ -160,6 +160,28 @@ describe("SidebarBody", () => {
     );
     expect(screen.getByText("miolo")).toBeInTheDocument();
   });
+
+  it("wraps children in a navigation landmark with a default label", () => {
+    render(
+      <SidebarProvider>
+        <SidebarBody>
+          <span>miolo</span>
+        </SidebarBody>
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();
+  });
+
+  it("uses a custom aria-label for the navigation landmark", () => {
+    render(
+      <SidebarProvider>
+        <SidebarBody aria-label="Menu">
+          <span>miolo</span>
+        </SidebarBody>
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("navigation", { name: "Menu" })).toBeInTheDocument();
+  });
 });
 
 // ---------- SidebarSectionLabel ----------
