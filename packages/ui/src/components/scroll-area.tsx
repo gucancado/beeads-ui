@@ -1,21 +1,25 @@
 "use client";
 
 import { ScrollArea as BaseScrollArea } from "@base-ui/react/scroll-area";
-import type { ComponentProps } from "react";
+import type { ComponentProps, Ref } from "react";
 import { cn } from "../lib/utils";
 
 export function ScrollArea({
   className,
   children,
+  viewportRef,
   ...props
-}: ComponentProps<typeof BaseScrollArea.Root>) {
+}: ComponentProps<typeof BaseScrollArea.Root> & {
+  /** Ref to the scrollable viewport element (e.g. for scroll restoration). */
+  viewportRef?: Ref<HTMLDivElement>;
+}) {
   return (
     <BaseScrollArea.Root
       data-slot="scroll-area"
       className={cn("relative overflow-hidden", className)}
       {...props}
     >
-      <BaseScrollArea.Viewport className="h-full w-full rounded-[inherit]">
+      <BaseScrollArea.Viewport ref={viewportRef} className="h-full w-full rounded-[inherit]">
         {children}
       </BaseScrollArea.Viewport>
       <BaseScrollArea.Scrollbar

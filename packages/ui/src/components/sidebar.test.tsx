@@ -1,5 +1,6 @@
 import { render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { createRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   Sidebar,
@@ -194,6 +195,18 @@ describe("SidebarBody", () => {
       </SidebarProvider>,
     );
     expect(screen.getByRole("navigation", { name: "Menu" })).toBeInTheDocument();
+  });
+
+  it("forwards viewportRef to the underlying scroll viewport", () => {
+    const ref = createRef<HTMLDivElement>();
+    render(
+      <SidebarProvider>
+        <SidebarBody viewportRef={ref}>
+          <span>miolo</span>
+        </SidebarBody>
+      </SidebarProvider>,
+    );
+    expect(ref.current).toBeInstanceOf(HTMLElement);
   });
 });
 
