@@ -369,4 +369,13 @@ describe("SidebarFooter", () => {
     await userEvent.click(screen.getByRole("button", { name: /editar perfil/i }));
     expect(onProfileClick).toHaveBeenCalledOnce();
   });
+
+  it("honors a custom logout label from the labels prop", () => {
+    render(
+      <SidebarProvider labels={{ logout: "Sign out" }}>
+        <SidebarFooter user={user} onLogout={vi.fn()} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "Sign out" })).toBeInTheDocument();
+  });
 });

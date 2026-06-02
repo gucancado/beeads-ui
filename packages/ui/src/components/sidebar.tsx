@@ -30,10 +30,27 @@ const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible
 
 // ---------- Context ----------
 
+export interface SidebarLabels {
+  collapse: string;
+  expand: string;
+  settings: string;
+  logout: string;
+  editProfile: string;
+}
+
+const DEFAULT_LABELS: SidebarLabels = {
+  collapse: "recolher menu",
+  expand: "expandir menu",
+  settings: "configurações",
+  logout: "sair",
+  editProfile: "editar perfil",
+};
+
 type SidebarContextValue = {
   collapsed: boolean;
   toggle: () => void;
   setCollapsed: (value: boolean) => void;
+  labels: SidebarLabels;
 };
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
@@ -88,8 +105,13 @@ export interface SidebarProviderProps {
   defaultCollapsed?: boolean;
   /** Persistence for uncontrolled mode (default "cookie"). */
   persist?: "cookie" | "localStorage" | "none";
-  /** Storage key (default "beeads_sidebar_collapsed"). */
+  /**
+   * Storage key (default "beeads_sidebar_collapsed").
+   * Should match `[A-Za-z0-9_-]` — it is interpolated into a cookie name and a RegExp.
+   */
   storageKey?: string;
+  /** Override the built-in UI strings (i18n). Partial; unset keys fall back to pt-BR defaults. */
+  labels?: Partial<SidebarLabels>;
 }
 
 export function SidebarProvider({
@@ -99,6 +121,7 @@ export function SidebarProvider({
   defaultCollapsed = false,
   persist = "cookie",
   storageKey = "beeads_sidebar_collapsed",
+  labels: labelsProp,
 }: SidebarProviderProps) {
   const isControlled = controlledCollapsed !== undefined;
   const [internal, setInternal] = useState(defaultCollapsed);
@@ -126,9 +149,14 @@ export function SidebarProvider({
 
   const toggle = useCallback(() => setCollapsed(!collapsed), [collapsed, setCollapsed]);
 
+  const labels = useMemo<SidebarLabels>(
+    () => ({ ...DEFAULT_LABELS, ...labelsProp }),
+    [labelsProp],
+  );
+
   const value = useMemo<SidebarContextValue>(
-    () => ({ collapsed, toggle, setCollapsed }),
-    [collapsed, toggle, setCollapsed],
+    () => ({ collapsed, toggle, setCollapsed, labels }),
+    [collapsed, toggle, setCollapsed, labels],
   );
 
   return (
@@ -171,7 +199,8 @@ export interface SidebarHeaderProps {
 }
 
 export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderProps) {
-  const { collapsed, toggle } = useSidebar();
+  const { collapsed, toggle, labels } = useSidebar();
+  const toggleLabel = collapsed ? labels.expand : labels.collapse;
   return (
     <div
       data-slot="sidebar-header"
@@ -193,8 +222,8 @@ export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderPro
         <button
           type="button"
           onClick={toggle}
-          title={collapsed ? "expandir menu" : "recolher menu"}
-          aria-label={collapsed ? "expandir menu" : "recolher menu"}
+          title={toggleLabel}
+          aria-label={toggleLabel}
           className={cn(
             "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
             focusRing,
@@ -364,7 +393,7 @@ export function SidebarFooter({
   onLogout,
   onProfileClick,
 }: SidebarFooterProps) {
-  const { collapsed } = useSidebar();
+  const { collapsed, labels } = useSidebar();
 
   const avatar = (
     <Avatar className={collapsed ? "h-10 w-10" : "h-9 w-9"}>
@@ -383,8 +412,8 @@ export function SidebarFooter({
             <button
               {...props}
               type="button"
-              title="configurações"
-              aria-label="configurações"
+              title={labels.settings}
+              aria-label={labels.settings}
               className={cn(
                 "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
                 focusRing,
@@ -415,8 +444,8 @@ export function SidebarFooter({
   const logoutButton = (
     <button
       type="button"
-      title="sair"
-      aria-label="sair"
+      title={labels.logout}
+      aria-label={labels.logout}
       onClick={onLogout}
       className={cn(
         "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-destructive/10 hover:text-destructive",
@@ -435,8 +464,8 @@ export function SidebarFooter({
             type="button"
             onClick={onProfileClick}
             disabled={!onProfileClick}
-            title={user ? `${user.name}${onProfileClick ? " · editar perfil" : ""}` : undefined}
-            aria-label={onProfileClick ? "editar perfil" : undefined}
+            title={user ? `${user.name}${onProfileClick ? ` · ${labels.editProfile}` : ""}` : undefined}
+            aria-label={onProfileClick ? labels.editProfile : undefined}
             className={cn(
               "h-10 w-10 shrink-0 rounded-full transition-all hover:ring-2 hover:ring-primary/40 disabled:hover:ring-0",
               focusRing,
@@ -458,8 +487,8 @@ export function SidebarFooter({
           type="button"
           onClick={onProfileClick}
           disabled={!onProfileClick}
-          title={onProfileClick ? "editar perfil" : undefined}
-          aria-label={onProfileClick ? "editar perfil" : undefined}
+          title={onProfileClick ? labels.editProfile : undefined}
+          aria-label={onProfileClick ? labels.editProfile : undefined}
           className={cn(
             "flex min-w-0 flex-1 items-center gap-3 rounded-xl px-2 py-3 text-left transition-colors hover:bg-sidebar-accent/50 disabled:hover:bg-transparent",
             focusRing,
