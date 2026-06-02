@@ -30,8 +30,8 @@
     "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
-    "@beeads/tokens": "workspace:^",
-    "@beeads/ui": "workspace:^",
+    "@beeads/tokens": ">=0.2.0 <1.0.0",
+    "@beeads/ui": ">=0.4.0 <1.0.0",
     "react": ">=18",
     "react-dom": ">=18"
   },
