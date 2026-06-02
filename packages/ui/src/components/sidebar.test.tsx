@@ -134,6 +134,19 @@ describe("SidebarProvider behavior", () => {
     expect(await screen.findByText("collapsed")).toBeTruthy();
   });
 
+  it("writes the cookie key when toggled with persist='cookie'", async () => {
+    render(
+      <SidebarProvider persist="cookie" storageKey={TEST_KEY}>
+        <Harness />
+      </SidebarProvider>,
+    );
+
+    const btn = screen.getByRole("button");
+    await userEvent.click(btn);
+    expect(btn).toHaveTextContent("collapsed");
+    expect(document.cookie).toContain(`${TEST_KEY}=true`);
+  });
+
   it("persist='none' writes nothing to localStorage", async () => {
     render(
       <SidebarProvider persist="none" storageKey={TEST_KEY}>

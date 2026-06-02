@@ -88,7 +88,9 @@ function writePersisted(persist: "cookie" | "localStorage", key: string, value: 
     if (persist === "localStorage") {
       window.localStorage.setItem(key, String(value));
     } else {
-      document.cookie = `${key}=${value}; path=/; max-age=${COOKIE_MAX_AGE}; samesite=lax`;
+      const secure =
+        typeof location !== "undefined" && location.protocol === "https:" ? "; secure" : "";
+      document.cookie = `${key}=${value}; path=/; max-age=${COOKIE_MAX_AGE}; samesite=lax${secure}`;
     }
   } catch {
     /* ignore */
