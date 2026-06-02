@@ -159,6 +159,15 @@ describe("SidebarProvider behavior", () => {
 
     expect(localStorage.getItem(TEST_KEY)).toBeNull();
   });
+
+  it("seeds the collapsed state from defaultCollapsed", () => {
+    render(
+      <SidebarProvider persist="none" defaultCollapsed>
+        <Harness />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button")).toHaveTextContent("collapsed");
+  });
 });
 
 // ---------- SidebarBody ----------
@@ -441,5 +450,46 @@ describe("SidebarFooter", () => {
       </SidebarProvider>,
     );
     expect(screen.getByRole("button", { name: "Sign out" })).toBeInTheDocument();
+  });
+
+  it("renders avatar/settings/logout buttons in a column when collapsed", () => {
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarFooter
+          user={user}
+          onLogout={vi.fn()}
+          onProfileClick={vi.fn()}
+          settingsItems={[{ label: "perfil", onSelect: vi.fn() }]}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "editar perfil" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "configurações" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "sair" })).toBeInTheDocument();
+  });
+
+  it("disables the profile button when onProfileClick is absent", () => {
+    render(
+      <SidebarProvider>
+        <SidebarFooter user={user} onLogout={vi.fn()} />
+      </SidebarProvider>,
+    );
+    // No accessible "editar perfil" name (aria-label only set when clickable),
+    // so target the avatar fallback's button via its disabled state.
+    const profileBtn = screen.getByText("G").closest("button");
+    expect(profileBtn).toBeDisabled();
+  });
+
+  it("keeps the settings button when settingsItems are provided", () => {
+    render(
+      <SidebarProvider>
+        <SidebarFooter
+          user={user}
+          onLogout={vi.fn()}
+          settingsItems={[{ label: "perfil", render: (p) => <a href="/x" {...p} /> }]}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "configurações" })).toBeInTheDocument();
   });
 });
