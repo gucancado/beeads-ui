@@ -34,17 +34,19 @@
     "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
+    "@beeads/tokens": "workspace:^",
+    "@beeads/ui": "workspace:^",
     "react": ">=18",
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@beeads/tokens": "workspace:*",
-    "@beeads/ui": "workspace:*",
     "date-fns": "^4.1.0",
     "recharts": "^2.15.4",
     "lucide-react": "^0.469.0"
   },
   "devDependencies": {
+    "@beeads/tokens": "workspace:*",
+    "@beeads/ui": "workspace:*",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "react": "^19.0.0",
