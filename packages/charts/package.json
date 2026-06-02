@@ -27,7 +27,8 @@
   "scripts": {
     "build": "tsup && node ../../scripts/copy-assets.mjs charts styles.css",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "peerDependencies": {
     "@beeads/tokens": ">=0.2.0 <1.0.0",
@@ -43,8 +44,13 @@
   "devDependencies": {
     "@beeads/tokens": "workspace:*",
     "@beeads/ui": "workspace:*",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "happy-dom": "^15.11.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tsup": "^8.3.5",
