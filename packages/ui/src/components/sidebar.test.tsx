@@ -280,6 +280,15 @@ describe("SidebarNavItem", () => {
     expect(screen.getByText("3")).toBeInTheDocument();
     expect(screen.getByRole("button")).not.toHaveTextContent("Alertas");
   });
+
+  it("gives the collapsed button an accessible name from title", () => {
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarNavItem label="Alertas" icon={<svg />} title="Alertas (3)" badge={<span>3</span>} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "Alertas (3)" })).toBeInTheDocument();
+  });
 });
 
 // ---------- SidebarFooter ----------

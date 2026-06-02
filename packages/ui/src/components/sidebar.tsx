@@ -280,13 +280,25 @@ export function SidebarNavItem({
     className,
   );
 
+  const tip = title ?? (typeof label === "string" ? label : undefined);
+
+  if (collapsed && !tip && typeof label !== "string") {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "SidebarNavItem: collapsed item needs a string `title` for an accessible name when `label` is not a string.",
+      );
+    }
+  }
+
   const inner = (
     <>
       {icon && <span className="shrink-0 [&_svg]:h-5 [&_svg]:w-5">{icon}</span>}
       {!collapsed && <span className="truncate">{label}</span>}
       {!collapsed && badge ? <span className="ml-auto shrink-0">{badge}</span> : null}
       {collapsed && badge ? (
-        <span className="absolute -right-0.5 -top-0.5 origin-top-right scale-90">{badge}</span>
+        <span aria-hidden className="absolute -right-0.5 -top-0.5 origin-top-right scale-90">
+          {badge}
+        </span>
       ) : null}
     </>
   );
@@ -299,11 +311,14 @@ export function SidebarNavItem({
     children: inner,
   };
 
+  if (collapsed && tip) {
+    elementProps["aria-label"] = tip;
+  }
+
   const element = render ? render(elementProps) : <button type="button" {...elementProps} />;
 
   if (!collapsed) return element;
 
-  const tip = title ?? (typeof label === "string" ? label : undefined);
   if (!tip) return element;
 
   return (

@@ -1,0 +1,31 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - button "Mudar para tema escuro" [ref=e4]:
+      - img [ref=e5]
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - img [ref=e10]
+        - heading "blo·quim" [level=1] [ref=e13]
+        - paragraph [ref=e14]:
+          - text: oi! quer ver o que tem no seu bloquim?
+          - text: então entra aí =)
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - img [ref=e18]
+            - textbox "voce@exemplo.com" [ref=e21]
+          - generic [ref=e22]:
+            - img [ref=e23]
+            - textbox "••••••••" [ref=e26]
+        - button "entrar" [ref=e27]
+      - paragraph [ref=e28]:
+        - text: não tem conta?
+        - link "cria uma, uai" [ref=e29] [cursor=pointer]:
+          - /url: /register?return_url=http%3A%2F%2Flocalhost%3A3001%2F
+    - contentinfo [ref=e30]:
+      - link "política de privacidade" [ref=e31] [cursor=pointer]:
+        - /url: /privacidade
+      - generic [ref=e32]: ·
+      - link "termos de serviço" [ref=e33] [cursor=pointer]:
+        - /url: /termos
+  - region "Notifications alt+T"
