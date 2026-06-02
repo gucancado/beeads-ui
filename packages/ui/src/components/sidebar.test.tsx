@@ -229,6 +229,15 @@ describe("SidebarHeader", () => {
     expect(screen.getByTestId("logo")).toBeInTheDocument();
   });
 
+  it("does not render the toggle button when collapsible is false", () => {
+    render(
+      <SidebarProvider collapsible={false}>
+        <SidebarHeader logo={<svg />} title="bloquim" />
+      </SidebarProvider>,
+    );
+    expect(screen.queryByRole("button", { name: "recolher menu" })).toBeNull();
+  });
+
   it("toggles collapsed state when the toggle button is clicked", async () => {
     const onChange = vi.fn();
     render(

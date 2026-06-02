@@ -51,6 +51,7 @@ type SidebarContextValue = {
   toggle: () => void;
   setCollapsed: (value: boolean) => void;
   labels: SidebarLabels;
+  collapsible: boolean;
 };
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
@@ -112,6 +113,12 @@ export interface SidebarProviderProps {
   storageKey?: string;
   /** Override the built-in UI strings (i18n). Partial; unset keys fall back to pt-BR defaults. */
   labels?: Partial<SidebarLabels>;
+  /**
+   * Whether the user can collapse/expand the sidebar (default true).
+   * When false, `toggle()` is a no-op and the header toggle button is not rendered.
+   * The collapsed state can still be driven programmatically via the controlled `collapsed` prop.
+   */
+  collapsible?: boolean;
 }
 
 export function SidebarProvider({
@@ -122,6 +129,7 @@ export function SidebarProvider({
   persist = "cookie",
   storageKey = "beeads_sidebar_collapsed",
   labels: labelsProp,
+  collapsible = true,
 }: SidebarProviderProps) {
   const isControlled = controlledCollapsed !== undefined;
   const [internal, setInternal] = useState(defaultCollapsed);
@@ -147,7 +155,10 @@ export function SidebarProvider({
     [isControlled, onCollapsedChange, persist, storageKey],
   );
 
-  const toggle = useCallback(() => setCollapsed(!collapsed), [collapsed, setCollapsed]);
+  const toggle = useCallback(() => {
+    if (!collapsible) return;
+    setCollapsed(!collapsed);
+  }, [collapsible, collapsed, setCollapsed]);
 
   const labels = useMemo<SidebarLabels>(
     () => ({ ...DEFAULT_LABELS, ...labelsProp }),
@@ -155,8 +166,8 @@ export function SidebarProvider({
   );
 
   const value = useMemo<SidebarContextValue>(
-    () => ({ collapsed, toggle, setCollapsed, labels }),
-    [collapsed, toggle, setCollapsed, labels],
+    () => ({ collapsed, toggle, setCollapsed, labels, collapsible }),
+    [collapsed, toggle, setCollapsed, labels, collapsible],
   );
 
   return (
@@ -199,7 +210,7 @@ export interface SidebarHeaderProps {
 }
 
 export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderProps) {
-  const { collapsed, toggle, labels } = useSidebar();
+  const { collapsed, toggle, labels, collapsible } = useSidebar();
   const toggleLabel = collapsed ? labels.expand : labels.collapse;
   return (
     <div
@@ -219,22 +230,24 @@ export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderPro
       </div>
       <div className={cn("flex items-center gap-1", collapsed && "flex-col")}>
         {!hideThemeToggle && <ThemeToggle />}
-        <button
-          type="button"
-          onClick={toggle}
-          title={toggleLabel}
-          aria-label={toggleLabel}
-          className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
-            focusRing,
-          )}
-        >
-          {collapsed ? (
-            <PanelLeftOpen className="h-4 w-4" />
-          ) : (
-            <PanelLeftClose className="h-4 w-4" />
-          )}
-        </button>
+        {collapsible && (
+          <button
+            type="button"
+            onClick={toggle}
+            title={toggleLabel}
+            aria-label={toggleLabel}
+            className={cn(
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+              focusRing,
+            )}
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="h-4 w-4" />
+            ) : (
+              <PanelLeftClose className="h-4 w-4" />
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
