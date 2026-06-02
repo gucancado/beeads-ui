@@ -24,16 +24,38 @@ import { ScrollArea } from "./scroll-area";
 import { ThemeToggle } from "./theme-toggle";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
+// `process.env.NODE_ENV` is statically replaced by consumer bundlers; declare a
+// minimal ambient so the type-only DTS build (no @types/node) compiles.
+declare const process: { env: { NODE_ENV?: string } };
+
 // ---------- Shared constants ----------
 
 const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 // ---------- Context ----------
 
+export interface SidebarLabels {
+  collapse: string;
+  expand: string;
+  settings: string;
+  logout: string;
+  editProfile: string;
+}
+
+const DEFAULT_LABELS: SidebarLabels = {
+  collapse: "recolher menu",
+  expand: "expandir menu",
+  settings: "configurações",
+  logout: "sair",
+  editProfile: "editar perfil",
+};
+
 type SidebarContextValue = {
   collapsed: boolean;
   toggle: () => void;
   setCollapsed: (value: boolean) => void;
+  labels: SidebarLabels;
+  collapsible: boolean;
 };
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
@@ -70,7 +92,9 @@ function writePersisted(persist: "cookie" | "localStorage", key: string, value: 
     if (persist === "localStorage") {
       window.localStorage.setItem(key, String(value));
     } else {
-      document.cookie = `${key}=${value}; path=/; max-age=${COOKIE_MAX_AGE}; samesite=lax`;
+      const secure =
+        typeof location !== "undefined" && location.protocol === "https:" ? "; secure" : "";
+      document.cookie = `${key}=${value}; path=/; max-age=${COOKIE_MAX_AGE}; samesite=lax${secure}`;
     }
   } catch {
     /* ignore */
@@ -88,8 +112,19 @@ export interface SidebarProviderProps {
   defaultCollapsed?: boolean;
   /** Persistence for uncontrolled mode (default "cookie"). */
   persist?: "cookie" | "localStorage" | "none";
-  /** Storage key (default "beeads_sidebar_collapsed"). */
+  /**
+   * Storage key (default "beeads_sidebar_collapsed").
+   * Should match `[A-Za-z0-9_-]` — it is interpolated into a cookie name and a RegExp.
+   */
   storageKey?: string;
+  /** Override the built-in UI strings (i18n). Partial; unset keys fall back to pt-BR defaults. */
+  labels?: Partial<SidebarLabels>;
+  /**
+   * Whether the user can collapse/expand the sidebar (default true).
+   * When false, `toggle()` is a no-op and the header toggle button is not rendered.
+   * The collapsed state can still be driven programmatically via the controlled `collapsed` prop.
+   */
+  collapsible?: boolean;
 }
 
 export function SidebarProvider({
@@ -99,6 +134,8 @@ export function SidebarProvider({
   defaultCollapsed = false,
   persist = "cookie",
   storageKey = "beeads_sidebar_collapsed",
+  labels: labelsProp,
+  collapsible = true,
 }: SidebarProviderProps) {
   const isControlled = controlledCollapsed !== undefined;
   const [internal, setInternal] = useState(defaultCollapsed);
@@ -124,11 +161,16 @@ export function SidebarProvider({
     [isControlled, onCollapsedChange, persist, storageKey],
   );
 
-  const toggle = useCallback(() => setCollapsed(!collapsed), [collapsed, setCollapsed]);
+  const toggle = useCallback(() => {
+    if (!collapsible) return;
+    setCollapsed(!collapsed);
+  }, [collapsible, collapsed, setCollapsed]);
+
+  const labels = useMemo<SidebarLabels>(() => ({ ...DEFAULT_LABELS, ...labelsProp }), [labelsProp]);
 
   const value = useMemo<SidebarContextValue>(
-    () => ({ collapsed, toggle, setCollapsed }),
-    [collapsed, toggle, setCollapsed],
+    () => ({ collapsed, toggle, setCollapsed, labels, collapsible }),
+    [collapsed, toggle, setCollapsed, labels, collapsible],
   );
 
   return (
@@ -166,12 +208,15 @@ export interface SidebarHeaderProps {
   logo: ReactNode;
   /** App title (hidden when collapsed). */
   title?: ReactNode;
-  /** Hide the built-in theme toggle. */
+  /** Hide the built-in theme toggle. Wins over `themeToggle`. */
   hideThemeToggle?: boolean;
+  /** Custom node rendered in place of the default `<ThemeToggle />`. Ignored when `hideThemeToggle`. */
+  themeToggle?: ReactNode;
 }
 
-export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderProps) {
-  const { collapsed, toggle } = useSidebar();
+export function SidebarHeader({ logo, title, hideThemeToggle, themeToggle }: SidebarHeaderProps) {
+  const { collapsed, toggle, labels, collapsible } = useSidebar();
+  const toggleLabel = collapsed ? labels.expand : labels.collapse;
   return (
     <div
       data-slot="sidebar-header"
@@ -189,23 +234,25 @@ export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderPro
         )}
       </div>
       <div className={cn("flex items-center gap-1", collapsed && "flex-col")}>
-        {!hideThemeToggle && <ThemeToggle />}
-        <button
-          type="button"
-          onClick={toggle}
-          title={collapsed ? "expandir menu" : "recolher menu"}
-          aria-label={collapsed ? "expandir menu" : "recolher menu"}
-          className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
-            focusRing,
-          )}
-        >
-          {collapsed ? (
-            <PanelLeftOpen className="h-4 w-4" />
-          ) : (
-            <PanelLeftClose className="h-4 w-4" />
-          )}
-        </button>
+        {!hideThemeToggle && (themeToggle ?? <ThemeToggle />)}
+        {collapsible && (
+          <button
+            type="button"
+            onClick={toggle}
+            title={toggleLabel}
+            aria-label={toggleLabel}
+            className={cn(
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+              focusRing,
+            )}
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="h-4 w-4" />
+            ) : (
+              <PanelLeftClose className="h-4 w-4" />
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -213,10 +260,15 @@ export function SidebarHeader({ logo, title, hideThemeToggle }: SidebarHeaderPro
 
 // ---------- SidebarBody ----------
 
-export function SidebarBody({ className, children, ...props }: ComponentProps<typeof ScrollArea>) {
+export function SidebarBody({
+  className,
+  children,
+  "aria-label": ariaLabel = "Navegação principal",
+  ...props
+}: ComponentProps<typeof ScrollArea> & { "aria-label"?: string }) {
   return (
     <ScrollArea data-slot="sidebar-body" className={cn("flex-1 px-2 py-4", className)} {...props}>
-      {children}
+      <nav aria-label={ariaLabel}>{children}</nav>
     </ScrollArea>
   );
 }
@@ -280,13 +332,25 @@ export function SidebarNavItem({
     className,
   );
 
+  const tip = title ?? (typeof label === "string" ? label : undefined);
+
+  if (collapsed && !tip && typeof label !== "string") {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "SidebarNavItem: collapsed item needs a string `title` for an accessible name when `label` is not a string.",
+      );
+    }
+  }
+
   const inner = (
     <>
       {icon && <span className="shrink-0 [&_svg]:h-5 [&_svg]:w-5">{icon}</span>}
       {!collapsed && <span className="truncate">{label}</span>}
       {!collapsed && badge ? <span className="ml-auto shrink-0">{badge}</span> : null}
       {collapsed && badge ? (
-        <span className="absolute -right-0.5 -top-0.5 origin-top-right scale-90">{badge}</span>
+        <span aria-hidden className="absolute -right-0.5 -top-0.5 origin-top-right scale-90">
+          {badge}
+        </span>
       ) : null}
     </>
   );
@@ -299,11 +363,14 @@ export function SidebarNavItem({
     children: inner,
   };
 
+  if (collapsed && tip) {
+    elementProps["aria-label"] = tip;
+  }
+
   const element = render ? render(elementProps) : <button type="button" {...elementProps} />;
 
   if (!collapsed) return element;
 
-  const tip = title ?? (typeof label === "string" ? label : undefined);
   if (!tip) return element;
 
   return (
@@ -344,7 +411,7 @@ export function SidebarFooter({
   onLogout,
   onProfileClick,
 }: SidebarFooterProps) {
-  const { collapsed } = useSidebar();
+  const { collapsed, labels } = useSidebar();
 
   const avatar = (
     <Avatar className={collapsed ? "h-10 w-10" : "h-9 w-9"}>
@@ -363,8 +430,8 @@ export function SidebarFooter({
             <button
               {...props}
               type="button"
-              title="configurações"
-              aria-label="configurações"
+              title={labels.settings}
+              aria-label={labels.settings}
               className={cn(
                 "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
                 focusRing,
@@ -395,8 +462,8 @@ export function SidebarFooter({
   const logoutButton = (
     <button
       type="button"
-      title="sair"
-      aria-label="sair"
+      title={labels.logout}
+      aria-label={labels.logout}
       onClick={onLogout}
       className={cn(
         "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sidebar-foreground/50 transition-all hover:bg-destructive/10 hover:text-destructive",
@@ -415,8 +482,10 @@ export function SidebarFooter({
             type="button"
             onClick={onProfileClick}
             disabled={!onProfileClick}
-            title={user ? `${user.name}${onProfileClick ? " · editar perfil" : ""}` : undefined}
-            aria-label={onProfileClick ? "editar perfil" : undefined}
+            title={
+              user ? `${user.name}${onProfileClick ? ` · ${labels.editProfile}` : ""}` : undefined
+            }
+            aria-label={onProfileClick ? labels.editProfile : undefined}
             className={cn(
               "h-10 w-10 shrink-0 rounded-full transition-all hover:ring-2 hover:ring-primary/40 disabled:hover:ring-0",
               focusRing,
@@ -438,8 +507,8 @@ export function SidebarFooter({
           type="button"
           onClick={onProfileClick}
           disabled={!onProfileClick}
-          title={onProfileClick ? "editar perfil" : undefined}
-          aria-label={onProfileClick ? "editar perfil" : undefined}
+          title={onProfileClick ? labels.editProfile : undefined}
+          aria-label={onProfileClick ? labels.editProfile : undefined}
           className={cn(
             "flex min-w-0 flex-1 items-center gap-3 rounded-xl px-2 py-3 text-left transition-colors hover:bg-sidebar-accent/50 disabled:hover:bg-transparent",
             focusRing,

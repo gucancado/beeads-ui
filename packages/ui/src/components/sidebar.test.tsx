@@ -1,5 +1,6 @@
 import { render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { createRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   Sidebar,
@@ -134,6 +135,19 @@ describe("SidebarProvider behavior", () => {
     expect(await screen.findByText("collapsed")).toBeTruthy();
   });
 
+  it("writes the cookie key when toggled with persist='cookie'", async () => {
+    render(
+      <SidebarProvider persist="cookie" storageKey={TEST_KEY}>
+        <Harness />
+      </SidebarProvider>,
+    );
+
+    const btn = screen.getByRole("button");
+    await userEvent.click(btn);
+    expect(btn).toHaveTextContent("collapsed");
+    expect(document.cookie).toContain(`${TEST_KEY}=true`);
+  });
+
   it("persist='none' writes nothing to localStorage", async () => {
     render(
       <SidebarProvider persist="none" storageKey={TEST_KEY}>
@@ -144,6 +158,15 @@ describe("SidebarProvider behavior", () => {
     await userEvent.click(screen.getByRole("button"));
 
     expect(localStorage.getItem(TEST_KEY)).toBeNull();
+  });
+
+  it("seeds the collapsed state from defaultCollapsed", () => {
+    render(
+      <SidebarProvider persist="none" defaultCollapsed>
+        <Harness />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button")).toHaveTextContent("collapsed");
   });
 });
 
@@ -159,6 +182,40 @@ describe("SidebarBody", () => {
       </SidebarProvider>,
     );
     expect(screen.getByText("miolo")).toBeInTheDocument();
+  });
+
+  it("wraps children in a navigation landmark with a default label", () => {
+    render(
+      <SidebarProvider>
+        <SidebarBody>
+          <span>miolo</span>
+        </SidebarBody>
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();
+  });
+
+  it("uses a custom aria-label for the navigation landmark", () => {
+    render(
+      <SidebarProvider>
+        <SidebarBody aria-label="Menu">
+          <span>miolo</span>
+        </SidebarBody>
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("navigation", { name: "Menu" })).toBeInTheDocument();
+  });
+
+  it("forwards viewportRef to the underlying scroll viewport", () => {
+    const ref = createRef<HTMLDivElement>();
+    render(
+      <SidebarProvider>
+        <SidebarBody viewportRef={ref}>
+          <span>miolo</span>
+        </SidebarBody>
+      </SidebarProvider>,
+    );
+    expect(ref.current).toBeInstanceOf(HTMLElement);
   });
 });
 
@@ -205,6 +262,44 @@ describe("SidebarHeader", () => {
     );
     expect(screen.queryByText("bloquim")).not.toBeInTheDocument();
     expect(screen.getByTestId("logo")).toBeInTheDocument();
+  });
+
+  it("does not render the toggle button when collapsible is false", () => {
+    render(
+      <SidebarProvider collapsible={false}>
+        <SidebarHeader logo={<svg />} title="bloquim" />
+      </SidebarProvider>,
+    );
+    expect(screen.queryByRole("button", { name: "recolher menu" })).toBeNull();
+  });
+
+  it("renders a custom themeToggle node in place of the default", () => {
+    render(
+      <SidebarProvider>
+        <SidebarHeader
+          logo={<svg />}
+          title="bloquim"
+          themeToggle={<button type="button">custom-theme</button>}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "custom-theme" })).toBeInTheDocument();
+    // default ThemeToggle (aria-label "Mudar para tema ...") should be absent
+    expect(screen.queryByRole("button", { name: /mudar para tema/i })).toBeNull();
+  });
+
+  it("renders nothing for theme toggle when hideThemeToggle wins over themeToggle", () => {
+    render(
+      <SidebarProvider>
+        <SidebarHeader
+          logo={<svg />}
+          title="bloquim"
+          hideThemeToggle
+          themeToggle={<button type="button">custom-theme</button>}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.queryByRole("button", { name: "custom-theme" })).toBeNull();
   });
 
   it("toggles collapsed state when the toggle button is clicked", async () => {
@@ -280,6 +375,37 @@ describe("SidebarNavItem", () => {
     expect(screen.getByText("3")).toBeInTheDocument();
     expect(screen.getByRole("button")).not.toHaveTextContent("Alertas");
   });
+
+  it("gives the collapsed button an accessible name from title", () => {
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarNavItem label="Alertas" icon={<svg />} title="Alertas (3)" badge={<span>3</span>} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "Alertas (3)" })).toBeInTheDocument();
+  });
+
+  it("warns in dev when a collapsed item has no accessible name", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarNavItem label={<span>icon-only</span>} icon={<svg />} />
+      </SidebarProvider>,
+    );
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it("does not warn when a collapsed item has a string title", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarNavItem label={<span>icon-only</span>} icon={<svg />} title="Tarefas" />
+      </SidebarProvider>,
+    );
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
 });
 
 // ---------- SidebarFooter ----------
@@ -337,5 +463,55 @@ describe("SidebarFooter", () => {
     );
     await userEvent.click(screen.getByRole("button", { name: /editar perfil/i }));
     expect(onProfileClick).toHaveBeenCalledOnce();
+  });
+
+  it("honors a custom logout label from the labels prop", () => {
+    render(
+      <SidebarProvider labels={{ logout: "Sign out" }}>
+        <SidebarFooter user={user} onLogout={vi.fn()} />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "Sign out" })).toBeInTheDocument();
+  });
+
+  it("renders avatar/settings/logout buttons in a column when collapsed", () => {
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarFooter
+          user={user}
+          onLogout={vi.fn()}
+          onProfileClick={vi.fn()}
+          settingsItems={[{ label: "perfil", onSelect: vi.fn() }]}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "editar perfil" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "configurações" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "sair" })).toBeInTheDocument();
+  });
+
+  it("disables the profile button when onProfileClick is absent", () => {
+    render(
+      <SidebarProvider>
+        <SidebarFooter user={user} onLogout={vi.fn()} />
+      </SidebarProvider>,
+    );
+    // No accessible "editar perfil" name (aria-label only set when clickable),
+    // so target the avatar fallback's button via its disabled state.
+    const profileBtn = screen.getByText("G").closest("button");
+    expect(profileBtn).toBeDisabled();
+  });
+
+  it("keeps the settings button when settingsItems are provided", () => {
+    render(
+      <SidebarProvider>
+        <SidebarFooter
+          user={user}
+          onLogout={vi.fn()}
+          settingsItems={[{ label: "perfil", render: (p) => <a href="/x" {...p} /> }]}
+        />
+      </SidebarProvider>,
+    );
+    expect(screen.getByRole("button", { name: "configurações" })).toBeInTheDocument();
   });
 });

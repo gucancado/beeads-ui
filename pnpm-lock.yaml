@@ -84,12 +84,6 @@ importers:
 
   packages/charts:
     dependencies:
-      '@beeads/tokens':
-        specifier: workspace:*
-        version: link:../tokens
-      '@beeads/ui':
-        specifier: workspace:*
-        version: link:../ui
       date-fns:
         specifier: ^4.1.0
         version: 4.3.0
@@ -100,6 +94,12 @@ importers:
         specifier: ^2.15.4
         version: 2.15.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     devDependencies:
+      '@beeads/tokens':
+        specifier: workspace:*
+        version: link:../tokens
+      '@beeads/ui':
+        specifier: workspace:*
+        version: link:../ui
       '@types/react':
         specifier: ^19.0.2
         version: 19.2.15

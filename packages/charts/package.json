@@ -1,6 +1,6 @@
 {
   "name": "@beeads/charts",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Visualização de dados do design system beeads — wrappers sobre recharts com tokens unificados",
   "license": "MIT",
   "repository": {
@@ -11,9 +11,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -25,26 +23,26 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": ["**/*.css"],
   "scripts": {
     "build": "tsup && node ../../scripts/copy-assets.mjs charts styles.css",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
+    "@beeads/tokens": ">=0.2.0 <1.0.0",
+    "@beeads/ui": ">=0.4.0 <1.0.0",
     "react": ">=18",
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@beeads/tokens": "workspace:*",
-    "@beeads/ui": "workspace:*",
     "date-fns": "^4.1.0",
     "recharts": "^2.15.4",
     "lucide-react": "^0.469.0"
   },
   "devDependencies": {
+    "@beeads/tokens": "workspace:*",
+    "@beeads/ui": "workspace:*",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "react": "^19.0.0",

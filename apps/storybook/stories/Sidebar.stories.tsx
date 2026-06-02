@@ -77,3 +77,27 @@ export const Dark: Story = {
     </div>
   ),
 };
+
+export const NonCollapsible: Story = {
+  render: () => (
+    <div className="h-[560px]">
+      <SidebarProvider collapsible={false} persist="none">
+        <Sidebar>
+          <SidebarHeader logo={<NotebookPen />} title={<>blo·quim</>} />
+          <SidebarBody aria-label="Menu principal">
+            <div className="space-y-1">
+              <SidebarNavItem icon={<CheckSquare />} label="Tarefas" active />
+              <SidebarNavItem icon={<Folders />} label="Espaços de Trabalho" />
+            </div>
+          </SidebarBody>
+          <SidebarFooter
+            user={user}
+            settingsItems={settingsItems}
+            onLogout={() => {}}
+            onProfileClick={() => {}}
+          />
+        </Sidebar>
+      </SidebarProvider>
+    </div>
+  ),
+};
