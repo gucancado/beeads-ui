@@ -384,6 +384,28 @@ describe("SidebarNavItem", () => {
     );
     expect(screen.getByRole("button", { name: "Alertas (3)" })).toBeInTheDocument();
   });
+
+  it("warns in dev when a collapsed item has no accessible name", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarNavItem label={<span>icon-only</span>} icon={<svg />} />
+      </SidebarProvider>,
+    );
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it("does not warn when a collapsed item has a string title", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <SidebarProvider collapsed onCollapsedChange={vi.fn()}>
+        <SidebarNavItem label={<span>icon-only</span>} icon={<svg />} title="Tarefas" />
+      </SidebarProvider>,
+    );
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
 });
 
 // ---------- SidebarFooter ----------

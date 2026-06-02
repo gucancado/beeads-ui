@@ -24,6 +24,10 @@ import { ScrollArea } from "./scroll-area";
 import { ThemeToggle } from "./theme-toggle";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
+// `process.env.NODE_ENV` is statically replaced by consumer bundlers; declare a
+// minimal ambient so the type-only DTS build (no @types/node) compiles.
+declare const process: { env: { NODE_ENV?: string } };
+
 // ---------- Shared constants ----------
 
 const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";

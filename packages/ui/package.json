@@ -11,9 +11,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -24,9 +22,7 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": ["**/*.css"],
   "scripts": {
     "build": "tsup && node ../../scripts/copy-assets.mjs ui styles.css",
     "dev": "tsup --watch",
