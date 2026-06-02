@@ -1,6 +1,6 @@
 {
   "name": "@beeads/charts",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Visualização de dados do design system beeads — wrappers sobre recharts com tokens unificados",
   "license": "MIT",
   "repository": {
