@@ -42,6 +42,13 @@
   --color-sidebar-accent: 0 0% 100%;
   --color-sidebar-accent-foreground: 222 47% 11%;
 
+  /* Derived full colors for the v4 @theme token (bare-var ref avoids a double-wrapped srgb fallback in color-mix). Auto-track .dark via the channel vars above. */
+  --color-sidebar-full: hsl(var(--color-sidebar));
+  --color-sidebar-foreground-full: hsl(var(--color-sidebar-foreground));
+  --color-sidebar-border-full: hsl(var(--color-sidebar-border));
+  --color-sidebar-accent-full: hsl(var(--color-sidebar-accent));
+  --color-sidebar-accent-foreground-full: hsl(var(--color-sidebar-accent-foreground));
+
   /* Paleta categórica para charts */
   --color-chart-1: var(--color-honey);
   --color-chart-2: oklch(0.58 0.13 240);
@@ -118,11 +125,11 @@
   --color-secondary-fg: var(--color-secondary-fg);
   --color-destructive: var(--color-destructive);
   --color-destructive-fg: var(--color-destructive-fg);
-  --color-sidebar: hsl(var(--color-sidebar));
-  --color-sidebar-foreground: hsl(var(--color-sidebar-foreground));
-  --color-sidebar-border: hsl(var(--color-sidebar-border));
-  --color-sidebar-accent: hsl(var(--color-sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--color-sidebar-accent-foreground));
+  --color-sidebar: var(--color-sidebar-full);
+  --color-sidebar-foreground: var(--color-sidebar-foreground-full);
+  --color-sidebar-border: var(--color-sidebar-border-full);
+  --color-sidebar-accent: var(--color-sidebar-accent-full);
+  --color-sidebar-accent-foreground: var(--color-sidebar-accent-foreground-full);
   --color-chart-1: var(--color-chart-1);
   --color-chart-2: var(--color-chart-2);
   --color-chart-3: var(--color-chart-3);
