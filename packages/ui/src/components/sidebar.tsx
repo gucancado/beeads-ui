@@ -162,10 +162,7 @@ export function SidebarProvider({
     setCollapsed(!collapsed);
   }, [collapsible, collapsed, setCollapsed]);
 
-  const labels = useMemo<SidebarLabels>(
-    () => ({ ...DEFAULT_LABELS, ...labelsProp }),
-    [labelsProp],
-  );
+  const labels = useMemo<SidebarLabels>(() => ({ ...DEFAULT_LABELS, ...labelsProp }), [labelsProp]);
 
   const value = useMemo<SidebarContextValue>(
     () => ({ collapsed, toggle, setCollapsed, labels, collapsible }),
@@ -481,7 +478,9 @@ export function SidebarFooter({
             type="button"
             onClick={onProfileClick}
             disabled={!onProfileClick}
-            title={user ? `${user.name}${onProfileClick ? ` · ${labels.editProfile}` : ""}` : undefined}
+            title={
+              user ? `${user.name}${onProfileClick ? ` · ${labels.editProfile}` : ""}` : undefined
+            }
             aria-label={onProfileClick ? labels.editProfile : undefined}
             className={cn(
               "h-10 w-10 shrink-0 rounded-full transition-all hover:ring-2 hover:ring-primary/40 disabled:hover:ring-0",
