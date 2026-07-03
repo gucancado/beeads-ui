@@ -15,3 +15,30 @@ export const Grid: Story = {
     </KpiGrid>
   ),
 };
+
+/**
+ * `deltaTone="neutral"`: mesma seta + percentual, porém em cinza (`text-muted-fg`)
+ * — pra métricas de contexto (investimento, alcance) onde subir/descer não é bom
+ * nem ruim. Compare com o "state" (verde/vermelho) da linha de cima.
+ */
+export const NeutralTone: Story = {
+  render: () => (
+    <KpiGrid>
+      <KpiCard label="Investimento (state)" value={48500} delta={0.12} hint="vs último mês" />
+      <KpiCard
+        label="Investimento (neutral)"
+        value={48500}
+        delta={0.12}
+        deltaTone="neutral"
+        hint="vs último mês"
+      />
+      <KpiCard
+        label="Alcance (neutral)"
+        value={1650000}
+        delta={-0.09}
+        deltaTone="neutral"
+        hint="soma diária (aprox.)"
+      />
+    </KpiGrid>
+  ),
+};

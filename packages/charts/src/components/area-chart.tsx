@@ -18,6 +18,8 @@ export interface AreaChartProps<T extends Record<string, number | string>> {
   series: Array<{ key: keyof T; label: string }>;
   height?: number;
   yFormatter?: ChartFormatter;
+  /** Formatter do tooltip. Default: o mesmo do eixo (`yFormatter`) — back-compat. */
+  tooltipFormatter?: ChartFormatter;
 }
 
 export function AreaChart<T extends Record<string, number | string>>({
@@ -26,6 +28,7 @@ export function AreaChart<T extends Record<string, number | string>>({
   series,
   height = 300,
   yFormatter = formatters.compact,
+  tooltipFormatter,
 }: AreaChartProps<T>) {
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -48,7 +51,7 @@ export function AreaChart<T extends Record<string, number | string>>({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xKey as string} />
         <YAxis tickFormatter={(v) => yFormatter(v)} />
-        <Tooltip content={tooltipRenderer(yFormatter)} />
+        <Tooltip content={tooltipRenderer(tooltipFormatter ?? yFormatter)} />
         {series.map((s, i) => (
           <Area
             key={s.key as string}

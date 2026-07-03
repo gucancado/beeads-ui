@@ -18,6 +18,8 @@ export interface LineChartProps<T extends Record<string, number | string>> {
   series: Array<{ key: keyof T; label: string }>;
   height?: number;
   yFormatter?: ChartFormatter;
+  /** Formatter do tooltip. Default: o mesmo do eixo (`yFormatter`) — back-compat. */
+  tooltipFormatter?: ChartFormatter;
 }
 
 export function LineChart<T extends Record<string, number | string>>({
@@ -26,6 +28,7 @@ export function LineChart<T extends Record<string, number | string>>({
   series,
   height = 300,
   yFormatter = formatters.compact,
+  tooltipFormatter,
 }: LineChartProps<T>) {
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -33,7 +36,7 @@ export function LineChart<T extends Record<string, number | string>>({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={xKey as string} />
         <YAxis tickFormatter={(v) => yFormatter(v)} />
-        <Tooltip content={tooltipRenderer(yFormatter)} />
+        <Tooltip content={tooltipRenderer(tooltipFormatter ?? yFormatter)} />
         {series.map((s, i) => (
           <Line
             key={s.key as string}
