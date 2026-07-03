@@ -16,6 +16,8 @@ vi.mock("recharts", async (importOriginal) => {
   };
 });
 
+import { formatters } from "../lib/chart-theme";
+import { tooltipRenderer } from "../lib/tooltip";
 import { AreaChart } from "./area-chart";
 import { BarChart } from "./bar-chart";
 import { ChartFrame } from "./chart-frame";
@@ -176,6 +178,28 @@ describe("KpiCard", () => {
     expect(screen.getByText("15.0%")).toBeInTheDocument();
     expect(screen.getByText("vs. mês anterior")).toBeInTheDocument();
   });
+
+  it('colors the delta by state when deltaTone is "state" (default)', () => {
+    render(<KpiCard label="Receita" value={1000} delta={0.15} />);
+    const deltaSpan = screen.getByText("15.0%").closest("span");
+    expect(deltaSpan?.className).toContain("text-ok");
+    expect(deltaSpan?.className).not.toContain("text-muted-fg");
+  });
+
+  it('renders the same arrow + percent but muted when deltaTone is "neutral"', () => {
+    render(<KpiCard label="Investimento" value={1000} delta={0.15} deltaTone="neutral" />);
+    const deltaSpan = screen.getByText("15.0%").closest("span");
+    expect(deltaSpan?.className).toContain("text-muted-fg");
+    expect(deltaSpan?.className).not.toContain("text-ok");
+    expect(deltaSpan?.className).not.toContain("text-err");
+  });
+
+  it('ignores inverseDelta when deltaTone is "neutral"', () => {
+    render(<KpiCard label="Alcance" value={1000} delta={-0.1} inverseDelta deltaTone="neutral" />);
+    const deltaSpan = screen.getByText("10.0%").closest("span");
+    expect(deltaSpan?.className).toContain("text-muted-fg");
+    expect(deltaSpan?.className).not.toContain("text-ok");
+  });
 });
 
 describe("KpiGrid", () => {
@@ -201,6 +225,73 @@ describe("FilterBar", () => {
     expect(screen.getByPlaceholderText("Filtrar campanhas…")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Status" })).toBeInTheDocument();
   });
+});
+
+describe("tooltip formatter (A2)", () => {
+  const tooltipProps = {
+    active: true,
+    label: "Jan",
+    payload: [
+      { dataKey: "spend", name: "Investimento", value: 1287.42, color: "#000" },
+      { dataKey: "clicks", name: "Cliques", value: 33263, color: "#111" },
+    ],
+    // biome-ignore lint/suspicious/noExplicitAny: recharts TooltipProps shape is partial here
+  } as any;
+
+  it("formats every entry with the single formatter (back-compat)", () => {
+    const renderTip = tooltipRenderer(formatters.compactShort);
+    render(renderTip(tooltipProps));
+    expect(screen.getByText("1,3k")).toBeInTheDocument();
+    expect(screen.getByText("33k")).toBeInTheDocument();
+  });
+
+  it("applies a distinct exact formatter (tooltip ≠ axis)", () => {
+    const renderTip = tooltipRenderer(formatters.currency);
+    render(renderTip(tooltipProps));
+    // exact currency, not compact — proves the tooltip formatter is independent
+    expect(screen.getByText("R$ 1.287,42")).toBeInTheDocument();
+  });
+
+  it("dispatches per-dataKey formatters for multi-axis charts", () => {
+    const renderTip = tooltipRenderer(formatters.compactShort, {
+      spend: formatters.currency,
+      clicks: formatters.compactShort,
+    });
+    render(renderTip(tooltipProps));
+    expect(screen.getByText("R$ 1.287,42")).toBeInTheDocument();
+    expect(screen.getByText("33k")).toBeInTheDocument();
+  });
+
+  it("charts accept a tooltipFormatter prop without throwing", () => {
+    const { container } = render(
+      <AreaChart
+        data={timeSeries}
+        xKey="month"
+        series={series}
+        yFormatter={formatters.compactShort}
+        tooltipFormatter={formatters.currency}
+      />,
+    );
+    expect(container.querySelector("svg.recharts-surface")).toBeInTheDocument();
+  });
+});
+
+describe("formatters.compactShort (A3)", () => {
+  const cases: Array<[number, string]> = [
+    [1250, "1,3k"],
+    [33263, "33k"],
+    [1651802, "1,7M"],
+    [999600, "1M"], // promoção do tier: não vira "1.000k"
+    [999400, "999k"],
+    [830, "830"],
+    [3618, "3,6k"],
+    [0, "0"],
+  ];
+  for (const [input, expected] of cases) {
+    it(`formats ${input} as "${expected}"`, () => {
+      expect(formatters.compactShort(input)).toBe(expected);
+    });
+  }
 });
 
 describe("PeriodPicker", () => {

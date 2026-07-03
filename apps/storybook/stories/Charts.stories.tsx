@@ -5,6 +5,7 @@ import {
   DonutChart,
   FunnelChart,
   LineChart,
+  formatters,
 } from "@beeads/charts";
 import type { Meta, StoryObj } from "@storybook/react";
 
@@ -47,6 +48,26 @@ export const Area: Story = {
   render: () => (
     <ChartFrame title="Area">
       <AreaChart data={timeSeries} xKey="date" series={[{ key: "spend", label: "Spend" }]} />
+    </ChartFrame>
+  ),
+};
+
+/**
+ * `tooltipFormatter` separado do eixo: o eixo Y usa `compactShort` ("R$ 1,3k")
+ * pra caber no tick, mas o tooltip mostra o valor exato ("R$ 25.100,00") ao passar
+ * o mouse — única fonte de precisão do hover. Sem a prop, os dois compartilhavam
+ * um formatter só.
+ */
+export const AxisVsTooltip: Story = {
+  render: () => (
+    <ChartFrame title="Investimento" description="Eixo compacto, tooltip exato">
+      <AreaChart
+        data={timeSeries}
+        xKey="date"
+        series={[{ key: "spend", label: "Investimento" }]}
+        yFormatter={(v) => `R$ ${formatters.compactShort(v)}`}
+        tooltipFormatter={formatters.currency}
+      />
     </ChartFrame>
   ),
 };

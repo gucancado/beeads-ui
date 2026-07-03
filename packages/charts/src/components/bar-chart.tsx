@@ -18,6 +18,8 @@ export interface BarChartProps<T extends Record<string, number | string>> {
   series: Array<{ key: keyof T; label: string }>;
   height?: number;
   yFormatter?: ChartFormatter;
+  /** Formatter do tooltip. Default: o mesmo do eixo (`yFormatter`) — back-compat. */
+  tooltipFormatter?: ChartFormatter;
   stacked?: boolean;
 }
 
@@ -27,6 +29,7 @@ export function BarChart<T extends Record<string, number | string>>({
   series,
   height = 300,
   yFormatter = formatters.compact,
+  tooltipFormatter,
   stacked = false,
 }: BarChartProps<T>) {
   return (
@@ -37,7 +40,7 @@ export function BarChart<T extends Record<string, number | string>>({
         <YAxis tickFormatter={(v) => yFormatter(v)} />
         <Tooltip
           cursor={{ fill: "var(--color-muted)", opacity: 0.3 }}
-          content={tooltipRenderer(yFormatter)}
+          content={tooltipRenderer(tooltipFormatter ?? yFormatter)}
         />
         {series.map((s, i) => (
           <Bar

@@ -10,6 +10,13 @@ export interface KpiCardProps {
   hint?: string;
   delta?: number | null;
   inverseDelta?: boolean;
+  /**
+   * "state" (default): delta verde/vermelho conforme direção (+`inverseDelta`).
+   * "neutral": mesma seta + percentual, porém com cor informativa (`text-muted-fg`)
+   * — pra métricas de contexto (investimento, alcance) onde subir/descer não é
+   * bom nem ruim. Em "neutral", `inverseDelta` é ignorado.
+   */
+  deltaTone?: "state" | "neutral";
   formatter?: ChartFormatter;
 }
 
@@ -19,6 +26,7 @@ export function KpiCard({
   hint,
   delta,
   inverseDelta = false,
+  deltaTone = "state",
   formatter = formatters.number,
 }: KpiCardProps) {
   const numericValue = typeof value === "number" ? formatter(value) : value;
@@ -28,7 +36,14 @@ export function KpiCard({
   const isGood = inverseDelta ? negative : positive;
   const isBad = inverseDelta ? positive : negative;
 
-  const deltaColor = isGood ? "text-ok" : isBad ? "text-err" : "text-muted-fg";
+  const deltaColor =
+    deltaTone === "neutral"
+      ? "text-muted-fg"
+      : isGood
+        ? "text-ok"
+        : isBad
+          ? "text-err"
+          : "text-muted-fg";
   const Icon = positive ? ArrowUp : negative ? ArrowDown : Minus;
 
   return (

@@ -27,6 +27,10 @@ export interface MultiLineChartProps<T extends Record<string, number | string>> 
   height?: number;
   leftFormatter?: ChartFormatter;
   rightFormatter?: ChartFormatter;
+  /** Formatter do tooltip do eixo esquerdo. Default: `leftFormatter` — back-compat. */
+  leftTooltipFormatter?: ChartFormatter;
+  /** Formatter do tooltip do eixo direito. Default: `rightFormatter` — back-compat. */
+  rightTooltipFormatter?: ChartFormatter;
 }
 
 const dashMap = { solid: "0", dashed: "6 4", dotted: "2 4" };
@@ -38,8 +42,18 @@ export function MultiLineChart<T extends Record<string, number | string>>({
   height = 320,
   leftFormatter = formatters.compact,
   rightFormatter = formatters.compact,
+  leftTooltipFormatter,
+  rightTooltipFormatter,
 }: MultiLineChartProps<T>) {
   const hasRight = series.some((s) => s.axis === "right");
+
+  // Tooltip: cada série formata conforme seu eixo. Default = formatter do eixo
+  // correspondente (back-compat com o comportamento antigo de formatter único).
+  const leftTip = leftTooltipFormatter ?? leftFormatter;
+  const rightTip = rightTooltipFormatter ?? rightFormatter;
+  const tooltipByKey = Object.fromEntries(
+    series.map((s) => [String(s.key), s.axis === "right" ? rightTip : leftTip]),
+  );
 
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -50,7 +64,7 @@ export function MultiLineChart<T extends Record<string, number | string>>({
         {hasRight && (
           <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => rightFormatter(v)} />
         )}
-        <Tooltip content={tooltipRenderer(leftFormatter)} />
+        <Tooltip content={tooltipRenderer(leftTip, tooltipByKey)} />
         <Legend />
         {series.map((s, i) => (
           <Line
