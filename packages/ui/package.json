@@ -1,6 +1,6 @@
 {
   "name": "@beeads/ui",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Componentes UI do design system beeads — primitivos sobre @base-ui/react",
   "license": "MIT",
   "repository": {
@@ -11,7 +11,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -22,7 +24,9 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "tsup && node ../../scripts/copy-assets.mjs ui styles.css",
     "dev": "tsup --watch",
