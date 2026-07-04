@@ -28,6 +28,9 @@
     "build": "tsup && node ../../scripts/copy-assets.mjs tokens theme.css preset.cjs",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "tailwindcss-animate": "^1.0.7"
+  },
   "devDependencies": {
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"

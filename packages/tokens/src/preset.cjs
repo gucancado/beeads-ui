@@ -74,5 +74,9 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  // tailwindcss-animate: os componentes do @beeads/ui usam animate-in/out,
+  // fade-*, zoom-* — sem o plugin registrado, dialogs/popovers de apps
+  // consumidores Tailwind v3 renderizam sem animação (visto no painel BCD,
+  // 2026-07-03; o painel adicionou o plugin localmente como workaround).
+  plugins: [require("tailwindcss-animate")],
 };
