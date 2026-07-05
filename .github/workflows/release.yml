@@ -34,4 +34,8 @@ jobs:
           title: "chore: release packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # setup-node com registry-url gera um .npmrc que lê NODE_AUTH_TOKEN;
+          # como esse .npmrc já existe, o changesets NÃO cria o dele a partir
+          # de NPM_TOKEN — sem NODE_AUTH_TOKEN o publish sai sem auth (E404).
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
