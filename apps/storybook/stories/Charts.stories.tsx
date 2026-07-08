@@ -14,12 +14,12 @@ export default meta;
 type Story = StoryObj;
 
 const timeSeries = [
-  { date: "Jan", spend: 12000, leads: 320 },
-  { date: "Fev", spend: 18500, leads: 410 },
-  { date: "Mar", spend: 21000, leads: 480 },
-  { date: "Abr", spend: 17800, leads: 390 },
-  { date: "Mai", spend: 22300, leads: 540 },
-  { date: "Jun", spend: 25100, leads: 620 },
+  { date: "jan", spend: 12000, leads: 320 },
+  { date: "fev", spend: 18500, leads: 410 },
+  { date: "mar", spend: 21000, leads: 480 },
+  { date: "abr", spend: 17800, leads: 390 },
+  { date: "mai", spend: 22300, leads: 540 },
+  { date: "jun", spend: 25100, leads: 620 },
 ];
 
 const donutData = [
@@ -29,15 +29,25 @@ const donutData = [
   { name: "TikTok", value: 1800 },
 ];
 
+const serieTemporal = [
+  { dia: "2026-07-01", sessoes: 320 },
+  { dia: "2026-07-02", sessoes: 410 },
+  { dia: "2026-07-03", sessoes: 380 },
+  { dia: "2026-07-04", sessoes: 455 },
+  { dia: "2026-07-05", sessoes: 500 },
+  { dia: "2026-07-06", sessoes: 470 },
+  { dia: "2026-07-07", sessoes: 530 },
+];
+
 export const Line: Story = {
   render: () => (
-    <ChartFrame title="Spend over time" description="Últimos 6 meses">
+    <ChartFrame title="investimento ao longo do tempo" description="últimos 6 meses">
       <LineChart
         data={timeSeries}
         xKey="date"
         series={[
-          { key: "spend", label: "Spend" },
-          { key: "leads", label: "Leads" },
+          { key: "spend", label: "investimento" },
+          { key: "leads", label: "leads" },
         ]}
       />
     </ChartFrame>
@@ -46,8 +56,8 @@ export const Line: Story = {
 
 export const Area: Story = {
   render: () => (
-    <ChartFrame title="Area">
-      <AreaChart data={timeSeries} xKey="date" series={[{ key: "spend", label: "Spend" }]} />
+    <ChartFrame title="área">
+      <AreaChart data={timeSeries} xKey="date" series={[{ key: "spend", label: "investimento" }]} />
     </ChartFrame>
   ),
 };
@@ -60,11 +70,11 @@ export const Area: Story = {
  */
 export const AxisVsTooltip: Story = {
   render: () => (
-    <ChartFrame title="Investimento" description="Eixo compacto, tooltip exato">
+    <ChartFrame title="investimento" description="eixo compacto, tooltip exato">
       <AreaChart
         data={timeSeries}
         xKey="date"
-        series={[{ key: "spend", label: "Investimento" }]}
+        series={[{ key: "spend", label: "investimento" }]}
         yFormatter={(v) => `R$ ${formatters.compactShort(v)}`}
         tooltipFormatter={formatters.currency}
       />
@@ -74,15 +84,15 @@ export const AxisVsTooltip: Story = {
 
 export const Bar: Story = {
   render: () => (
-    <ChartFrame title="Leads por mês">
-      <BarChart data={timeSeries} xKey="date" series={[{ key: "leads", label: "Leads" }]} />
+    <ChartFrame title="leads por mês">
+      <BarChart data={timeSeries} xKey="date" series={[{ key: "leads", label: "leads" }]} />
     </ChartFrame>
   ),
 };
 
 export const Donut: Story = {
   render: () => (
-    <ChartFrame title="Distribuição por plataforma">
+    <ChartFrame title="distribuição por plataforma">
       <DonutChart data={donutData} />
     </ChartFrame>
   ),
@@ -90,14 +100,32 @@ export const Donut: Story = {
 
 export const Funnel: Story = {
   render: () => (
-    <ChartFrame title="Funil de conversão">
+    <ChartFrame title="funil de conversão">
       <FunnelChart
         stages={[
-          { label: "Impressões", value: 1_000_000 },
-          { label: "Clicks", value: 25_000 },
-          { label: "Leads", value: 1_500 },
-          { label: "Conversões", value: 280 },
+          { label: "impressões", value: 1_000_000 },
+          { label: "cliques", value: 25_000 },
+          { label: "leads", value: 1_500 },
+          { label: "conversões", value: 280 },
         ]}
+      />
+    </ChartFrame>
+  ),
+};
+
+/**
+ * `xFormatter` numa série temporal real: os dados vêm com datas ISO (`dia`) e o
+ * eixo X + o label do tooltip usam `formatters.dateShort` ("dd/MM") em vez de
+ * mostrar a string ISO crua.
+ */
+export const SerieTemporal: Story = {
+  render: () => (
+    <ChartFrame title="sessões por dia" description="datas ISO formatadas com xFormatter">
+      <LineChart
+        data={serieTemporal}
+        xKey="dia"
+        series={[{ key: "sessoes", label: "sessões" }]}
+        xFormatter={formatters.dateShort}
       />
     </ChartFrame>
   ),

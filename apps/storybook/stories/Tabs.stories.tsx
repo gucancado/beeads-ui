@@ -9,11 +9,11 @@ export const Default: Story = {
   render: () => (
     <Tabs defaultValue="account" className="w-[400px]">
       <TabsList>
-        <TabsTrigger value="account">Conta</TabsTrigger>
-        <TabsTrigger value="password">Senha</TabsTrigger>
+        <TabsTrigger value="account">conta</TabsTrigger>
+        <TabsTrigger value="password">senha</TabsTrigger>
       </TabsList>
-      <TabsContent value="account">Conteúdo da aba Conta.</TabsContent>
-      <TabsContent value="password">Conteúdo da aba Senha.</TabsContent>
+      <TabsContent value="account">conteúdo da aba conta.</TabsContent>
+      <TabsContent value="password">conteúdo da aba senha.</TabsContent>
     </Tabs>
   ),
 };

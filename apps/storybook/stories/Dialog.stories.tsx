@@ -17,15 +17,15 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger render={(props) => <Button {...props}>Abrir Dialog</Button>} />
+      <DialogTrigger render={(props) => <Button {...props}>abrir diálogo</Button>} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Confirmar ação</DialogTitle>
-          <DialogDescription>Tem certeza que deseja prosseguir?</DialogDescription>
+          <DialogTitle>confirmar ação</DialogTitle>
+          <DialogDescription>tem certeza que deseja prosseguir?</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline">Cancelar</Button>
-          <Button>Confirmar</Button>
+          <Button variant="outline">cancelar</Button>
+          <Button>confirmar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

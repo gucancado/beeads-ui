@@ -17,13 +17,13 @@ type Story = StoryObj<typeof Badge>;
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge>Default</Badge>
-      <Badge variant="secondary">Secondary</Badge>
-      <Badge variant="accent">Accent</Badge>
-      <Badge variant="destructive">Destructive</Badge>
-      <Badge variant="outline">Outline</Badge>
-      <Badge variant="ok">OK</Badge>
-      <Badge variant="warn">Warn</Badge>
+      <Badge>padrão</Badge>
+      <Badge variant="secondary">secundário</Badge>
+      <Badge variant="accent">destaque</Badge>
+      <Badge variant="destructive">destrutivo</Badge>
+      <Badge variant="outline">contorno</Badge>
+      <Badge variant="ok">ok</Badge>
+      <Badge variant="warn">atenção</Badge>
     </div>
   ),
 };
