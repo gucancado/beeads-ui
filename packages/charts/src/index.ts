@@ -14,4 +14,10 @@ export { KpiCard, type KpiCardProps } from "./components/kpi-card";
 export { KpiGrid } from "./components/kpi-grid";
 export { PeriodPicker, type PeriodPickerProps, type PeriodValue } from "./components/period-picker";
 export { FilterBar, type FilterBarProps } from "./components/filter-bar";
-export { CHART_COLORS, chartColor, formatters, type ChartFormatter } from "./lib/chart-theme";
+export {
+  CHART_COLORS,
+  chartColor,
+  formatters,
+  type ChartFormatter,
+  type DateInput,
+} from "./lib/chart-theme";

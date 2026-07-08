@@ -20,9 +20,11 @@ describe("formatters (pt-BR)", () => {
   });
 
   it("formats currency as BRL", () => {
-    // pt-BR currency uses non-breaking space (U+00A0) between symbol and value
-    expect(formatters.currency(1234.5)).toBe("R$ 1.234,50");
-    expect(formatters.currency(0)).toBe("R$ 0,00");
+    // pt-BR currency uses a non-breaking space (U+00A0) between symbol and value.
+    // Written with explicit backslash-u00A0 escapes (not literal NBSP chars) so a
+    // future rewrite can't silently normalize them to a plain space again.
+    expect(formatters.currency(1234.5)).toBe("R$\u00A01.234,50");
+    expect(formatters.currency(0)).toBe("R$\u00A00,00");
   });
 
   it("formats a ratio as a percentage with one decimal", () => {
@@ -32,8 +34,9 @@ describe("formatters (pt-BR)", () => {
   });
 
   it("formats large numbers in compact pt-BR notation", () => {
-    expect(formatters.compact(1500)).toBe("1,5 mil");
-    expect(formatters.compact(2_000_000)).toBe("2 mi");
+    // Same NBSP (U+00A0) trap as currency above, escaped explicitly.
+    expect(formatters.compact(1500)).toBe("1,5\u00A0mil");
+    expect(formatters.compact(2_000_000)).toBe("2\u00A0mi");
   });
 });
 
