@@ -148,6 +148,7 @@ export {
   useSidebar,
   type SidebarFooterProps,
   type SidebarHeaderProps,
+  type SidebarLabels,
   type SidebarNavItemProps,
   type SidebarProviderProps,
   type SidebarSettingsItem,

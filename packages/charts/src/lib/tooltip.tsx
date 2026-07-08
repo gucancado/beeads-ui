@@ -3,14 +3,14 @@
 import type { ReactElement } from "react";
 import type { TooltipProps } from "recharts";
 import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { type ChartFormatter, formatters } from "./chart-theme";
+import { type AxisTickFormatter, type ChartFormatter, formatters } from "./chart-theme";
 
 type InjectedFormatters = {
   __formatter?: ChartFormatter;
   /** Formatter por dataKey (usado quando eixos têm formatters distintos). */
   __formatterByKey?: Record<string, ChartFormatter>;
   /** Formata o label do tooltip (mesmo formatter usado nos ticks do eixo X). */
-  __labelFormatter?: (value: string | number) => string;
+  __labelFormatter?: AxisTickFormatter;
 };
 
 export function ChartTooltip(props: TooltipProps<ValueType, NameType>) {
@@ -61,7 +61,7 @@ export function ChartTooltip(props: TooltipProps<ValueType, NameType>) {
 export function tooltipRenderer(
   formatter?: ChartFormatter,
   formatterByKey?: Record<string, ChartFormatter>,
-  labelFormatter?: (value: string | number) => string,
+  labelFormatter?: AxisTickFormatter,
 ) {
   return (props: TooltipProps<ValueType, NameType>): ReactElement => (
     <ChartTooltip
