@@ -252,7 +252,7 @@ export function Sidebar({ className, children, ...props }: ComponentProps<"aside
 }
 
 /** Botão hamburger pro topbar do app: abre o off-canvas no mobile, colapsa/expande no desktop. */
-export function SidebarTrigger({ className, ...props }: ComponentProps<"button">) {
+export function SidebarTrigger({ className, onClick, ...props }: ComponentProps<"button">) {
   const { isMobile, openMobile, setOpenMobile, toggle, collapsed, collapsible, labels } =
     useSidebar();
   if (!isMobile && !collapsible) return null;
@@ -263,7 +263,11 @@ export function SidebarTrigger({ className, ...props }: ComponentProps<"button">
       data-slot="sidebar-trigger"
       title={label}
       aria-label={label}
-      onClick={() => (isMobile ? setOpenMobile(!openMobile) : toggle())}
+      onClick={(e) => {
+        if (isMobile) setOpenMobile(!openMobile);
+        else toggle();
+        onClick?.(e);
+      }}
       className={cn(
         "flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-fg/70 transition-colors hover:bg-muted hover:text-fg",
         focusRing,

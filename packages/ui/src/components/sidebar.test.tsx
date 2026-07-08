@@ -129,6 +129,16 @@ describe("Sidebar responsive", () => {
     await user.click(screen.getByText("tarefas"));
     expect(screen.queryByText("tarefas")).not.toBeInTheDocument();
   });
+
+  it("desktop: SidebarTrigger não renderiza nada quando collapsible é false", () => {
+    mockMatchMedia(false);
+    render(
+      <SidebarProvider collapsible={false}>
+        <SidebarTrigger />
+      </SidebarProvider>,
+    );
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
 });
 
 // ---------- SidebarProvider behavior ----------
