@@ -1,8 +1,15 @@
 "use client";
 
-import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from "@beeads/ui";
+import {
+  Button,
+  Calendar,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  cn,
+  useIsMobile,
+} from "@beeads/ui";
 import { addDays, format, startOfMonth, subDays, subMonths } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -19,12 +26,12 @@ export interface PeriodPickerProps {
 const today = () => new Date();
 
 const presets: Array<{ label: string; build: () => PeriodValue }> = [
-  { label: "Últimos 7 dias", build: () => ({ from: subDays(today(), 6), to: today() }) },
-  { label: "Últimos 30 dias", build: () => ({ from: subDays(today(), 29), to: today() }) },
-  { label: "Últimos 90 dias", build: () => ({ from: subDays(today(), 89), to: today() }) },
-  { label: "Este mês", build: () => ({ from: startOfMonth(today()), to: today() }) },
+  { label: "últimos 7 dias", build: () => ({ from: subDays(today(), 6), to: today() }) },
+  { label: "últimos 30 dias", build: () => ({ from: subDays(today(), 29), to: today() }) },
+  { label: "últimos 90 dias", build: () => ({ from: subDays(today(), 89), to: today() }) },
+  { label: "este mês", build: () => ({ from: startOfMonth(today()), to: today() }) },
   {
-    label: "Mês passado",
+    label: "mês passado",
     build: () => {
       const last = subMonths(today(), 1);
       return { from: startOfMonth(last), to: addDays(startOfMonth(today()), -1) };
@@ -34,6 +41,7 @@ const presets: Array<{ label: string; build: () => PeriodValue }> = [
 
 export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
   const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -41,14 +49,20 @@ export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
         render={
           <Button variant="outline" className="gap-2 font-normal">
             <CalendarIcon className="h-4 w-4" />
-            {format(value.from, "d MMM", { locale: ptBR })} –{" "}
-            {format(value.to, "d MMM y", { locale: ptBR })}
+            {format(value.from, "dd/MM/yyyy")} – {format(value.to, "dd/MM/yyyy")}
           </Button>
         }
       />
-      <PopoverContent className="w-auto p-0" align="end">
-        <div className="flex">
-          <div className="flex flex-col gap-1 border-r border-border p-2">
+      <PopoverContent className="w-auto max-w-[calc(100vw-1rem)] p-0" align="end">
+        <div className={cn("flex", isMobile && "flex-col")}>
+          <div
+            className={cn(
+              "flex gap-1 p-2",
+              isMobile
+                ? "flex-row flex-wrap border-b border-border"
+                : "flex-col border-r border-border",
+            )}
+          >
             {presets.map((p) => (
               <Button
                 key={p.label}
@@ -73,7 +87,7 @@ export function PeriodPicker({ value, onChange }: PeriodPickerProps) {
                 onChange({ from: range.from, to: range.to });
               }
             }}
-            numberOfMonths={2}
+            numberOfMonths={isMobile ? 1 : 2}
           />
         </div>
       </PopoverContent>

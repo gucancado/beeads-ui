@@ -321,10 +321,10 @@ describe("PeriodPicker", () => {
         onChange={() => {}}
       />,
     );
-    // The trigger button shows the pt-BR formatted range (e.g. "1 jan – 31 jan 2026")
+    // The trigger button shows the dd/MM/yyyy formatted range (e.g. "01/01/2026 – 31/01/2026")
     const trigger = screen.getByRole("button");
     expect(trigger).toBeInTheDocument();
-    expect(trigger.textContent).toMatch(/jan/i);
-    expect(trigger.textContent).toMatch(/2026/);
+    expect(trigger.textContent).toMatch(/01\/01\/2026/);
+    expect(trigger.textContent).toMatch(/31\/01\/2026/);
   });
 });
