@@ -70,6 +70,25 @@ describe("LineChart", () => {
     const { container } = render(<LineChart data={timeSeries} xKey="month" series={series} />);
     expect(container.querySelector("svg.recharts-surface")).toBeInTheDocument();
   });
+
+  it("aplica xFormatter nos ticks do eixo X", () => {
+    const dateSeries = [
+      { dia: "2026-07-01", valor: 10 },
+      { dia: "2026-07-02", valor: 20 },
+    ];
+    const { container } = render(
+      <LineChart
+        data={dateSeries}
+        xKey="dia"
+        series={[{ key: "valor", label: "valor" }]}
+        xFormatter={(v) => formatters.dateShort(v)}
+      />,
+    );
+    // recharts renderiza ticks como <text>; com xFormatter os labels ISO viram dd/MM
+    expect(container.querySelector("svg.recharts-surface")).toBeInTheDocument();
+    expect(screen.queryByText("2026-07-01")).not.toBeInTheDocument();
+    expect(screen.getByText("01/07")).toBeInTheDocument();
+  });
 });
 
 describe("AreaChart", () => {

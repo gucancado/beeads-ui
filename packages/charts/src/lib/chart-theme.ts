@@ -14,6 +14,9 @@ export function chartColor(index: number) {
 
 export type ChartFormatter = (value: number) => string;
 
+/** Formatter genérico pra ticks do eixo X (aceita string ou number, ex.: datas ISO ou categorias). */
+export type AxisTickFormatter = (value: string | number) => string;
+
 export type DateInput = Date | string | number;
 
 /** ISO date-only ("2026-07-08") via parseISO = meia-noite LOCAL (new Date() daria UTC → shift de dia em UTC-3). */

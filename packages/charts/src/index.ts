@@ -19,5 +19,6 @@ export {
   chartColor,
   formatters,
   type ChartFormatter,
+  type AxisTickFormatter,
   type DateInput,
 } from "./lib/chart-theme";
