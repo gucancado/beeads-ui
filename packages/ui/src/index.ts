@@ -144,6 +144,7 @@ export {
   SidebarNavItem,
   SidebarProvider,
   SidebarSectionLabel,
+  SidebarTrigger,
   useSidebar,
   type SidebarFooterProps,
   type SidebarHeaderProps,

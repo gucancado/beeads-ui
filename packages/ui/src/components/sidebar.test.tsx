@@ -10,8 +10,36 @@ import {
   SidebarNavItem,
   SidebarProvider,
   SidebarSectionLabel,
+  SidebarTrigger,
   useSidebar,
 } from "./sidebar";
+
+// ---------- matchMedia mock (same helper as use-is-mobile.test.ts) ----------
+
+type MatchMediaListener = (e: { matches: boolean }) => void;
+
+function mockMatchMedia(initialMatches: boolean) {
+  let listener: MatchMediaListener | null = null;
+  const mql = {
+    matches: initialMatches,
+    media: "",
+    addEventListener: (_: string, cb: MatchMediaListener) => {
+      listener = cb;
+    },
+    removeEventListener: () => {
+      listener = null;
+    },
+  };
+  const spy = vi.fn().mockReturnValue(mql);
+  vi.stubGlobal("matchMedia", spy);
+  return {
+    spy,
+    setMatches(matches: boolean) {
+      mql.matches = matches;
+      listener?.({ matches });
+    },
+  };
+}
 
 // ---------- Harness ----------
 
@@ -55,6 +83,51 @@ describe("Sidebar", () => {
     const aside = screen.getByTestId("aside");
     expect(aside).toHaveClass("w-16");
     expect(aside).toHaveAttribute("data-state", "collapsed");
+  });
+});
+
+// ---------- Sidebar responsive (sticky desktop / off-canvas mobile) ----------
+
+describe("Sidebar responsive", () => {
+  beforeEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("desktop: sidebar é sticky e ocupa a viewport", () => {
+    mockMatchMedia(false);
+    render(
+      <SidebarProvider>
+        <Sidebar>conteúdo</Sidebar>
+      </SidebarProvider>,
+    );
+    const aside = document.querySelector('[data-slot="sidebar"]');
+    expect(aside?.className).toContain("sticky");
+    expect(aside?.className).toContain("h-svh");
+  });
+
+  it("mobile: SidebarTrigger abre o off-canvas e nav item fecha", async () => {
+    mockMatchMedia(true);
+    const user = userEvent.setup();
+    render(
+      <SidebarProvider>
+        <SidebarTrigger />
+        <Sidebar>
+          <SidebarBody>
+            <SidebarNavItem label="tarefas" />
+          </SidebarBody>
+        </Sidebar>
+      </SidebarProvider>,
+    );
+    // fechado: conteúdo do sheet não está no DOM
+    expect(screen.queryByText("tarefas")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "abrir menu" }));
+    expect(screen.getByText("tarefas")).toBeInTheDocument();
+    await user.click(screen.getByText("tarefas"));
+    expect(screen.queryByText("tarefas")).not.toBeInTheDocument();
   });
 });
 
