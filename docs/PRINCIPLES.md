@@ -60,7 +60,7 @@ Se um componente novo precisa de uma cor, a cor vai em `@beeads/tokens` primeiro
 Componentes referenciam **tokens semânticos** (`bg-card`, `text-fg`, `border-border`), não brand colors direto. Isso permite trocar `.dark` no html e tudo se adapta. Brand colors (honey, etc.) ficam visíveis em ambos os modos.
 
 ### Sidebar é o chassi dos apps
-- **Fixa:** a barra lateral não acompanha o scroll da página (sticky por default no DS).
+- **Fixa:** a barra lateral não acompanha o scroll da página (`sticky top-0 h-svh` por default no DS). Monte-a num chassi de altura total de viewport. Em layout confinado (dentro de uma caixa menor que a viewport, ex.: abaixo de um topbar global), sobrescreva com `<Sidebar className="h-full" />`.
 - **Rodapé obrigatório:** todo app renderiza `SidebarFooter` com `user={{ name, email }}`, `settingsItems` (botão de configurações) e `onLogout` (botão de sair) — o padrão do Bloquim é a referência.
 
 ## Responsividade
