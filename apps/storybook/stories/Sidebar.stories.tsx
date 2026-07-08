@@ -135,9 +135,9 @@ export const PaginaComScroll: Story = {
         </Sidebar>
         <main className="flex-1 p-6">
           <h1 className="font-display text-xl">conteúdo longo — a barra fica fixa</h1>
-          {Array.from({ length: 60 }, (_, i) => (
-            <p key={i} className="py-2 text-sm text-muted-fg">
-              linha {i + 1}
+          {Array.from({ length: 60 }, (_, i) => i + 1).map((linha) => (
+            <p key={`linha-${linha}`} className="py-2 text-sm text-muted-fg">
+              linha {linha}
             </p>
           ))}
         </main>
