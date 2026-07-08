@@ -263,7 +263,7 @@ export function SidebarHeader({ logo, title, hideThemeToggle, themeToggle }: Sid
 export function SidebarBody({
   className,
   children,
-  "aria-label": ariaLabel = "Navegação principal",
+  "aria-label": ariaLabel = "navegação principal",
   ...props
 }: ComponentProps<typeof ScrollArea> & { "aria-label"?: string }) {
   return (
@@ -282,7 +282,7 @@ export function SidebarSectionLabel({ className, children, ...props }: Component
     <p
       data-slot="sidebar-section-label"
       className={cn(
-        "mb-2 px-3 text-[10px] font-normal uppercase tracking-[0.22em] text-sidebar-foreground/50",
+        "mb-2 px-3 text-[10px] font-normal lowercase tracking-[0.22em] text-sidebar-foreground/50",
         className,
       )}
       {...props}

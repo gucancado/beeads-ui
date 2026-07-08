@@ -40,17 +40,17 @@ export function PaginationLink({
 
 export function PaginationPrevious(props: ComponentProps<typeof PaginationLink>) {
   return (
-    <PaginationLink aria-label="Página anterior" size="default" className="gap-1 pl-2.5" {...props}>
+    <PaginationLink aria-label="página anterior" size="default" className="gap-1 pl-2.5" {...props}>
       <ChevronLeft className="h-4 w-4" />
-      <span>Anterior</span>
+      <span>anterior</span>
     </PaginationLink>
   );
 }
 
 export function PaginationNext(props: ComponentProps<typeof PaginationLink>) {
   return (
-    <PaginationLink aria-label="Próxima página" size="default" className="gap-1 pr-2.5" {...props}>
-      <span>Próxima</span>
+    <PaginationLink aria-label="próxima página" size="default" className="gap-1 pr-2.5" {...props}>
+      <span>próxima</span>
       <ChevronRight className="h-4 w-4" />
     </PaginationLink>
   );
@@ -64,7 +64,7 @@ export function PaginationEllipsis({ className, ...props }: ComponentProps<"span
       {...props}
     >
       <MoreHorizontal className="h-4 w-4" />
-      <span className="sr-only">More</span>
+      <span className="sr-only">mais</span>
     </span>
   );
 }

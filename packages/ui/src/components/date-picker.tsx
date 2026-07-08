@@ -20,7 +20,7 @@ interface DatePickerProps {
 export function DatePicker({
   value,
   onChange,
-  placeholder = "Escolher data",
+  placeholder = "escolher data",
   disabled,
   className,
 }: DatePickerProps) {

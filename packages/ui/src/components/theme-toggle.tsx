@@ -18,10 +18,10 @@ export function ThemeToggle({ size = "icon" }: ThemeToggleProps) {
       variant="ghost"
       size={size}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Mudar para tema claro" : "Mudar para tema escuro"}
+      aria-label={isDark ? "mudar para tema claro" : "mudar para tema escuro"}
     >
       {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-      <span className="sr-only">Trocar tema</span>
+      <span className="sr-only">trocar tema</span>
     </Button>
   );
 }

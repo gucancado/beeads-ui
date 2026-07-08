@@ -192,7 +192,7 @@ describe("SidebarBody", () => {
         </SidebarBody>
       </SidebarProvider>,
     );
-    expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "navegação principal" })).toBeInTheDocument();
   });
 
   it("uses a custom aria-label for the navigation landmark", () => {
