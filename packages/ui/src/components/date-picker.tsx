@@ -1,7 +1,6 @@
 "use client";
 
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../lib/utils";
@@ -20,7 +19,7 @@ interface DatePickerProps {
 export function DatePicker({
   value,
   onChange,
-  placeholder = "Escolher data",
+  placeholder = "escolher data",
   disabled,
   className,
 }: DatePickerProps) {
@@ -40,7 +39,7 @@ export function DatePicker({
             disabled={disabled}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {value ? format(value, "PPP", { locale: ptBR }) : placeholder}
+            {value ? format(value, "dd/MM/yyyy") : placeholder}
           </Button>
         }
       />

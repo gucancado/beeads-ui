@@ -8,13 +8,13 @@ const meta: Meta<typeof Input> = {
 export default meta;
 type Story = StoryObj<typeof Input>;
 
-export const Default: Story = { args: { placeholder: "Digite seu nome" } };
+export const Default: Story = { args: { placeholder: "digite seu nome" } };
 export const WithLabel: Story = {
   render: () => (
     <div className="grid w-full max-w-sm gap-1.5">
-      <Label htmlFor="email">Email</Label>
+      <Label htmlFor="email">email</Label>
       <Input id="email" type="email" placeholder="voce@beeads.com.br" />
     </div>
   ),
 };
-export const Disabled: Story = { args: { disabled: true, placeholder: "Desabilitado" } };
+export const Disabled: Story = { args: { disabled: true, placeholder: "desabilitado" } };

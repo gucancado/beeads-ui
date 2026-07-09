@@ -9,7 +9,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { type ChartFormatter, chartColor, formatters } from "../lib/chart-theme";
+import {
+  type AxisTickFormatter,
+  type ChartFormatter,
+  chartColor,
+  formatters,
+} from "../lib/chart-theme";
 import { tooltipRenderer } from "../lib/tooltip";
 
 export interface LineChartProps<T extends Record<string, number | string>> {
@@ -20,6 +25,8 @@ export interface LineChartProps<T extends Record<string, number | string>> {
   yFormatter?: ChartFormatter;
   /** Formatter do tooltip. Default: o mesmo do eixo (`yFormatter`) — back-compat. */
   tooltipFormatter?: ChartFormatter;
+  /** Formata os ticks do eixo X e o label do tooltip (ex.: formatters.dateShort pra séries temporais). */
+  xFormatter?: AxisTickFormatter;
 }
 
 export function LineChart<T extends Record<string, number | string>>({
@@ -29,14 +36,15 @@ export function LineChart<T extends Record<string, number | string>>({
   height = 300,
   yFormatter = formatters.compact,
   tooltipFormatter,
+  xFormatter,
 }: LineChartProps<T>) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsLineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={xKey as string} />
+        <XAxis dataKey={xKey as string} tickFormatter={xFormatter} />
         <YAxis tickFormatter={(v) => yFormatter(v)} />
-        <Tooltip content={tooltipRenderer(tooltipFormatter ?? yFormatter)} />
+        <Tooltip content={tooltipRenderer(tooltipFormatter ?? yFormatter, undefined, xFormatter)} />
         {series.map((s, i) => (
           <Line
             key={s.key as string}

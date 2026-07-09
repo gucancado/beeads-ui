@@ -24,9 +24,18 @@ const sheetVariants = cva("fixed z-50 gap-4 bg-card p-6 shadow-lg border-border"
 
 interface SheetContentProps
   extends ComponentProps<typeof BaseDialog.Popup>,
-    VariantProps<typeof sheetVariants> {}
+    VariantProps<typeof sheetVariants> {
+  /** Omite o botão X (ex.: off-canvas com header próprio). Fechar continua via backdrop/Esc. */
+  hideClose?: boolean;
+}
 
-export function SheetContent({ side, className, children, ...props }: SheetContentProps) {
+export function SheetContent({
+  side,
+  className,
+  children,
+  hideClose,
+  ...props
+}: SheetContentProps) {
   return (
     <BaseDialog.Portal>
       <BaseDialog.Backdrop className="fixed inset-0 z-50 bg-black/50" />
@@ -36,10 +45,12 @@ export function SheetContent({ side, className, children, ...props }: SheetConte
         {...props}
       >
         {children}
-        <BaseDialog.Close className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </BaseDialog.Close>
+        {!hideClose && (
+          <BaseDialog.Close className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
+            <X className="h-4 w-4" />
+            <span className="sr-only">fechar</span>
+          </BaseDialog.Close>
+        )}
       </BaseDialog.Popup>
     </BaseDialog.Portal>
   );

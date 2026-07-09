@@ -11,23 +11,23 @@ export const AllVariants: Story = {
     <div className="space-y-4">
       <Alert>
         <Info />
-        <AlertTitle>Heads up!</AlertTitle>
-        <AlertDescription>Mensagem informativa neutra.</AlertDescription>
+        <AlertTitle>atenção</AlertTitle>
+        <AlertDescription>mensagem informativa neutra.</AlertDescription>
       </Alert>
       <Alert variant="ok">
         <CheckCircle2 />
-        <AlertTitle>Sucesso</AlertTitle>
-        <AlertDescription>Operação concluída.</AlertDescription>
+        <AlertTitle>sucesso</AlertTitle>
+        <AlertDescription>operação concluída.</AlertDescription>
       </Alert>
       <Alert variant="warn">
         <AlertCircle />
-        <AlertTitle>Atenção</AlertTitle>
-        <AlertDescription>Algo precisa de revisão.</AlertDescription>
+        <AlertTitle>atenção</AlertTitle>
+        <AlertDescription>algo precisa de revisão.</AlertDescription>
       </Alert>
       <Alert variant="destructive">
         <AlertCircle />
-        <AlertTitle>Erro</AlertTitle>
-        <AlertDescription>Não foi possível completar a ação.</AlertDescription>
+        <AlertTitle>erro</AlertTitle>
+        <AlertDescription>não foi possível completar a ação.</AlertDescription>
       </Alert>
     </div>
   ),

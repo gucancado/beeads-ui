@@ -10,7 +10,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { type ChartFormatter, chartColor, formatters } from "../lib/chart-theme";
+import {
+  type AxisTickFormatter,
+  type ChartFormatter,
+  chartColor,
+  formatters,
+} from "../lib/chart-theme";
 import { tooltipRenderer } from "../lib/tooltip";
 
 export interface MultiLineSeries<T> {
@@ -31,6 +36,8 @@ export interface MultiLineChartProps<T extends Record<string, number | string>> 
   leftTooltipFormatter?: ChartFormatter;
   /** Formatter do tooltip do eixo direito. Default: `rightFormatter` — back-compat. */
   rightTooltipFormatter?: ChartFormatter;
+  /** Formata os ticks do eixo X e o label do tooltip (ex.: formatters.dateShort pra séries temporais). */
+  xFormatter?: AxisTickFormatter;
 }
 
 const dashMap = { solid: "0", dashed: "6 4", dotted: "2 4" };
@@ -44,6 +51,7 @@ export function MultiLineChart<T extends Record<string, number | string>>({
   rightFormatter = formatters.compact,
   leftTooltipFormatter,
   rightTooltipFormatter,
+  xFormatter,
 }: MultiLineChartProps<T>) {
   const hasRight = series.some((s) => s.axis === "right");
 
@@ -59,12 +67,12 @@ export function MultiLineChart<T extends Record<string, number | string>>({
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={xKey as string} />
+        <XAxis dataKey={xKey as string} tickFormatter={xFormatter} />
         <YAxis yAxisId="left" tickFormatter={(v) => leftFormatter(v)} />
         {hasRight && (
           <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => rightFormatter(v)} />
         )}
-        <Tooltip content={tooltipRenderer(leftTip, tooltipByKey)} />
+        <Tooltip content={tooltipRenderer(leftTip, tooltipByKey, xFormatter)} />
         <Legend />
         {series.map((s, i) => (
           <Line

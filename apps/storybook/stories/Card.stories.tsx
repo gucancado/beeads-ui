@@ -19,15 +19,15 @@ export const Default: Story = {
   render: () => (
     <Card className="w-[350px]">
       <CardHeader>
-        <CardTitle>Workspace nova</CardTitle>
-        <CardDescription>Crie uma workspace para começar.</CardDescription>
+        <CardTitle>workspace nova</CardTitle>
+        <CardDescription>crie uma workspace para começar.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm">Detalhes da workspace…</p>
+        <p className="text-sm">detalhes da workspace…</p>
       </CardContent>
       <CardFooter className="gap-2">
-        <Button variant="outline">Cancelar</Button>
-        <Button>Criar</Button>
+        <Button variant="outline">cancelar</Button>
+        <Button>criar</Button>
       </CardFooter>
     </Card>
   ),

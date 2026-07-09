@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, PanelLeftClose, PanelLeftOpen, Settings } from "lucide-react";
+import { LogOut, PanelLeft, PanelLeftClose, PanelLeftOpen, Settings } from "lucide-react";
 import {
   type ComponentProps,
   type ReactElement,
@@ -12,6 +12,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useIsMobile } from "../hooks/use-is-mobile";
 import { cn } from "../lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import {
@@ -21,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { ScrollArea } from "./scroll-area";
+import { Sheet, SheetContent } from "./sheet";
 import { ThemeToggle } from "./theme-toggle";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
@@ -40,6 +42,8 @@ export interface SidebarLabels {
   settings: string;
   logout: string;
   editProfile: string;
+  openMenu: string;
+  mobileMenu: string;
 }
 
 const DEFAULT_LABELS: SidebarLabels = {
@@ -48,6 +52,8 @@ const DEFAULT_LABELS: SidebarLabels = {
   settings: "configurações",
   logout: "sair",
   editProfile: "editar perfil",
+  openMenu: "abrir menu",
+  mobileMenu: "menu de navegação",
 };
 
 type SidebarContextValue = {
@@ -56,6 +62,9 @@ type SidebarContextValue = {
   setCollapsed: (value: boolean) => void;
   labels: SidebarLabels;
   collapsible: boolean;
+  isMobile: boolean;
+  openMobile: boolean;
+  setOpenMobile: (value: boolean) => void;
 };
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
@@ -125,6 +134,8 @@ export interface SidebarProviderProps {
    * The collapsed state can still be driven programmatically via the controlled `collapsed` prop.
    */
   collapsible?: boolean;
+  /** Breakpoint (px) abaixo do qual a sidebar vira off-canvas (default 768). */
+  mobileBreakpoint?: number;
 }
 
 export function SidebarProvider({
@@ -136,6 +147,7 @@ export function SidebarProvider({
   storageKey = "beeads_sidebar_collapsed",
   labels: labelsProp,
   collapsible = true,
+  mobileBreakpoint = 768,
 }: SidebarProviderProps) {
   const isControlled = controlledCollapsed !== undefined;
   const [internal, setInternal] = useState(defaultCollapsed);
@@ -168,9 +180,22 @@ export function SidebarProvider({
 
   const labels = useMemo<SidebarLabels>(() => ({ ...DEFAULT_LABELS, ...labelsProp }), [labelsProp]);
 
+  const isMobile = useIsMobile(mobileBreakpoint);
+  const [openMobile, setOpenMobile] = useState(false);
+
   const value = useMemo<SidebarContextValue>(
-    () => ({ collapsed, toggle, setCollapsed, labels, collapsible }),
-    [collapsed, toggle, setCollapsed, labels, collapsible],
+    () => ({
+      // No mobile o off-canvas é sempre expandido; o collapse desktop não se aplica.
+      collapsed: isMobile ? false : collapsed,
+      toggle,
+      setCollapsed,
+      labels,
+      collapsible,
+      isMobile,
+      openMobile,
+      setOpenMobile,
+    }),
+    [collapsed, toggle, setCollapsed, labels, collapsible, isMobile, openMobile],
   );
 
   return (
@@ -183,13 +208,38 @@ export function SidebarProvider({
 // ---------- Sidebar (aside) ----------
 
 export function Sidebar({ className, children, ...props }: ComponentProps<"aside">) {
-  const { collapsed } = useSidebar();
+  const { collapsed, isMobile, openMobile, setOpenMobile, labels } = useSidebar();
+
+  if (isMobile) {
+    return (
+      <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+        <SheetContent
+          side="left"
+          hideClose
+          aria-label={labels.mobileMenu}
+          className="w-72 max-w-[85vw] border-r-0 bg-sidebar p-0 text-sidebar-foreground"
+        >
+          <aside
+            data-slot="sidebar"
+            data-state="expanded"
+            data-mobile="true"
+            className={cn("flex h-full w-full flex-col", className)}
+            {...props}
+          >
+            {children}
+          </aside>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
   return (
     <aside
       data-slot="sidebar"
       data-state={collapsed ? "collapsed" : "expanded"}
       className={cn(
-        "flex flex-col shrink-0 bg-sidebar text-sidebar-foreground shadow-xl",
+        // sticky: barra fixa enquanto a página rola (padrão de plataforma)
+        "sticky top-0 h-svh flex flex-col shrink-0 bg-sidebar text-sidebar-foreground shadow-xl",
         "transition-all duration-300 ease-in-out",
         collapsed ? "w-16" : "w-72",
         className,
@@ -198,6 +248,35 @@ export function Sidebar({ className, children, ...props }: ComponentProps<"aside
     >
       {children}
     </aside>
+  );
+}
+
+/** Botão hamburger pro topbar do app: abre o off-canvas no mobile, colapsa/expande no desktop. */
+export function SidebarTrigger({ className, onClick, ...props }: ComponentProps<"button">) {
+  const { isMobile, openMobile, setOpenMobile, toggle, collapsed, collapsible, labels } =
+    useSidebar();
+  if (!isMobile && !collapsible) return null;
+  const label = isMobile ? labels.openMenu : collapsed ? labels.expand : labels.collapse;
+  return (
+    <button
+      type="button"
+      data-slot="sidebar-trigger"
+      title={label}
+      aria-label={label}
+      onClick={(e) => {
+        if (isMobile) setOpenMobile(!openMobile);
+        else toggle();
+        onClick?.(e);
+      }}
+      className={cn(
+        "flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-fg/70 transition-colors hover:bg-muted hover:text-fg",
+        focusRing,
+        className,
+      )}
+      {...props}
+    >
+      <PanelLeft className="h-4 w-4" />
+    </button>
   );
 }
 
@@ -215,7 +294,7 @@ export interface SidebarHeaderProps {
 }
 
 export function SidebarHeader({ logo, title, hideThemeToggle, themeToggle }: SidebarHeaderProps) {
-  const { collapsed, toggle, labels, collapsible } = useSidebar();
+  const { collapsed, toggle, labels, collapsible, isMobile } = useSidebar();
   const toggleLabel = collapsed ? labels.expand : labels.collapse;
   return (
     <div
@@ -235,7 +314,7 @@ export function SidebarHeader({ logo, title, hideThemeToggle, themeToggle }: Sid
       </div>
       <div className={cn("flex items-center gap-1", collapsed && "flex-col")}>
         {!hideThemeToggle && (themeToggle ?? <ThemeToggle />)}
-        {collapsible && (
+        {collapsible && !isMobile && (
           <button
             type="button"
             onClick={toggle}
@@ -263,7 +342,7 @@ export function SidebarHeader({ logo, title, hideThemeToggle, themeToggle }: Sid
 export function SidebarBody({
   className,
   children,
-  "aria-label": ariaLabel = "Navegação principal",
+  "aria-label": ariaLabel = "navegação principal",
   ...props
 }: ComponentProps<typeof ScrollArea> & { "aria-label"?: string }) {
   return (
@@ -282,7 +361,7 @@ export function SidebarSectionLabel({ className, children, ...props }: Component
     <p
       data-slot="sidebar-section-label"
       className={cn(
-        "mb-2 px-3 text-[10px] font-normal uppercase tracking-[0.22em] text-sidebar-foreground/50",
+        "mb-2 px-3 text-[10px] font-normal lowercase tracking-[0.22em] text-sidebar-foreground/50",
         className,
       )}
       {...props}
@@ -321,7 +400,7 @@ export function SidebarNavItem({
   badge,
   className,
 }: SidebarNavItemProps) {
-  const { collapsed } = useSidebar();
+  const { collapsed, isMobile, setOpenMobile } = useSidebar();
 
   const classes = cn(
     "relative flex items-center gap-3 rounded-xl transition-all duration-200 cursor-pointer",
@@ -359,7 +438,10 @@ export function SidebarNavItem({
     className: classes,
     "data-slot": "sidebar-nav-item",
     "data-active": active || undefined,
-    onClick,
+    onClick: () => {
+      if (isMobile) setOpenMobile(false);
+      onClick?.();
+    },
     children: inner,
   };
 

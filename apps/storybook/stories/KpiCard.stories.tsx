@@ -8,10 +8,10 @@ type Story = StoryObj;
 export const Grid: Story = {
   render: () => (
     <KpiGrid>
-      <KpiCard label="Revenue" value={48500} delta={0.12} hint="vs último mês" />
+      <KpiCard label="receita" value={48500} delta={0.12} hint="vs último mês" />
       <KpiCard label="CPA" value={32.5} delta={-0.08} inverseDelta hint="custo por aquisição" />
       <KpiCard label="ROAS" value="3.4x" delta={0.05} />
-      <KpiCard label="Conversions" value={1240} delta={null} />
+      <KpiCard label="conversões" value={1240} delta={null} />
     </KpiGrid>
   ),
 };
@@ -24,16 +24,16 @@ export const Grid: Story = {
 export const NeutralTone: Story = {
   render: () => (
     <KpiGrid>
-      <KpiCard label="Investimento (state)" value={48500} delta={0.12} hint="vs último mês" />
+      <KpiCard label="investimento (state)" value={48500} delta={0.12} hint="vs último mês" />
       <KpiCard
-        label="Investimento (neutral)"
+        label="investimento (neutral)"
         value={48500}
         delta={0.12}
         deltaTone="neutral"
         hint="vs último mês"
       />
       <KpiCard
-        label="Alcance (neutral)"
+        label="alcance (neutral)"
         value={1650000}
         delta={-0.09}
         deltaTone="neutral"

@@ -20,9 +20,11 @@ describe("formatters (pt-BR)", () => {
   });
 
   it("formats currency as BRL", () => {
-    // pt-BR currency uses non-breaking space (U+00A0) between symbol and value
-    expect(formatters.currency(1234.5)).toBe("R$ 1.234,50");
-    expect(formatters.currency(0)).toBe("R$ 0,00");
+    // pt-BR currency uses a non-breaking space (U+00A0) between symbol and value.
+    // Written with explicit backslash-u00A0 escapes (not literal NBSP chars) so a
+    // future rewrite can't silently normalize them to a plain space again.
+    expect(formatters.currency(1234.5)).toBe("R$\u00A01.234,50");
+    expect(formatters.currency(0)).toBe("R$\u00A00,00");
   });
 
   it("formats a ratio as a percentage with one decimal", () => {
@@ -32,7 +34,40 @@ describe("formatters (pt-BR)", () => {
   });
 
   it("formats large numbers in compact pt-BR notation", () => {
-    expect(formatters.compact(1500)).toBe("1,5 mil");
-    expect(formatters.compact(2_000_000)).toBe("2 mi");
+    // Same NBSP (U+00A0) trap as currency above, escaped explicitly.
+    expect(formatters.compact(1500)).toBe("1,5\u00A0mil");
+    expect(formatters.compact(2_000_000)).toBe("2\u00A0mi");
+  });
+});
+
+describe("formatters de data/hora (padrão dd/MM/yyyy + HH:mm)", () => {
+  const d = new Date(2026, 6, 8, 14, 30, 5); // 08/07/2026 14:30:05 local
+
+  it("date → dd/MM/yyyy", () => {
+    expect(formatters.date(d)).toBe("08/07/2026");
+  });
+
+  it("date aceita string ISO date-only como data local (sem shift de fuso)", () => {
+    expect(formatters.date("2026-07-08")).toBe("08/07/2026");
+  });
+
+  it("date aceita epoch ms", () => {
+    expect(formatters.date(d.getTime())).toBe("08/07/2026");
+  });
+
+  it("dateShort → dd/MM", () => {
+    expect(formatters.dateShort(d)).toBe("08/07");
+  });
+
+  it("time → HH:mm", () => {
+    expect(formatters.time(d)).toBe("14:30");
+  });
+
+  it("timeSeconds → HH:mm:ss", () => {
+    expect(formatters.timeSeconds(d)).toBe("14:30:05");
+  });
+
+  it("dateTime → dd/MM/yyyy HH:mm", () => {
+    expect(formatters.dateTime(d)).toBe("08/07/2026 14:30");
   });
 });

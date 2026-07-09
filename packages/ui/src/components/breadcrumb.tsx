@@ -60,7 +60,7 @@ export function BreadcrumbEllipsis({ className, ...props }: ComponentProps<"span
       {...props}
     >
       <MoreHorizontal className="h-4 w-4" />
-      <span className="sr-only">More</span>
+      <span className="sr-only">mais</span>
     </span>
   );
 }

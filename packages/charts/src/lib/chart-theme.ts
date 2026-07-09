@@ -1,3 +1,5 @@
+import { format, parseISO } from "date-fns";
+
 export const CHART_COLORS = [
   "var(--color-chart-1)",
   "var(--color-chart-2)",
@@ -11,6 +13,15 @@ export function chartColor(index: number) {
 }
 
 export type ChartFormatter = (value: number) => string;
+
+/** Formatter genérico pra ticks do eixo X (aceita string ou number, ex.: datas ISO ou categorias). */
+export type AxisTickFormatter = (value: string | number) => string;
+
+export type DateInput = Date | string | number;
+
+/** ISO date-only ("2026-07-08") via parseISO = meia-noite LOCAL (new Date() daria UTC → shift de dia em UTC-3). */
+const toDate = (v: DateInput): Date =>
+  v instanceof Date ? v : typeof v === "string" ? parseISO(v) : new Date(v);
 
 export const formatters = {
   number: (v: number) => v.toLocaleString("pt-BR"),
@@ -35,4 +46,14 @@ export const formatters = {
       return `${(v / 1000).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 1 })}k`;
     return Math.round(v).toLocaleString("pt-BR");
   },
+  /** Data padrão da plataforma: 08/07/2026. */
+  date: (v: DateInput) => format(toDate(v), "dd/MM/yyyy"),
+  /** Data curta pra eixos densos: 08/07 (ano vem do contexto do período). */
+  dateShort: (v: DateInput) => format(toDate(v), "dd/MM"),
+  /** Hora padrão: 14:30. */
+  time: (v: DateInput) => format(toDate(v), "HH:mm"),
+  /** Hora com segundos: 14:30:05. */
+  timeSeconds: (v: DateInput) => format(toDate(v), "HH:mm:ss"),
+  /** Data + hora: 08/07/2026 14:30. */
+  dateTime: (v: DateInput) => format(toDate(v), "dd/MM/yyyy HH:mm"),
 };

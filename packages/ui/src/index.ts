@@ -1,5 +1,6 @@
 export { cn } from "./lib/utils";
 export { ThemeProvider, useTheme } from "./providers/theme-provider";
+export { useIsMobile } from "./hooks/use-is-mobile";
 export { Button, buttonVariants, type ButtonProps } from "./components/button";
 
 // Forms
@@ -143,9 +144,11 @@ export {
   SidebarNavItem,
   SidebarProvider,
   SidebarSectionLabel,
+  SidebarTrigger,
   useSidebar,
   type SidebarFooterProps,
   type SidebarHeaderProps,
+  type SidebarLabels,
   type SidebarNavItemProps,
   type SidebarProviderProps,
   type SidebarSettingsItem,

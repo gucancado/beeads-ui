@@ -20,7 +20,7 @@ export function DialogContent({
       <BaseDialog.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border border-border bg-card p-6 shadow-lg sm:rounded-lg",
+          "fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border border-border bg-card p-6 shadow-lg max-h-[calc(100dvh-2rem)] overflow-y-auto sm:rounded-lg",
           "data-[open]:animate-in data-[closed]:animate-out",
           className,
         )}
@@ -29,7 +29,7 @@ export function DialogContent({
         {children}
         <BaseDialog.Close className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
           <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">fechar</span>
         </BaseDialog.Close>
       </BaseDialog.Popup>
     </BaseDialog.Portal>

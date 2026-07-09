@@ -12,7 +12,7 @@ export interface FilterBarProps extends ComponentProps<"div"> {
 
 export function FilterBar({
   className,
-  searchPlaceholder = "Buscar…",
+  searchPlaceholder = "buscar…",
   searchValue,
   onSearchChange,
   children,

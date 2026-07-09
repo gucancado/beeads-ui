@@ -3,12 +3,14 @@
 import type { ReactElement } from "react";
 import type { TooltipProps } from "recharts";
 import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { type ChartFormatter, formatters } from "./chart-theme";
+import { type AxisTickFormatter, type ChartFormatter, formatters } from "./chart-theme";
 
 type InjectedFormatters = {
   __formatter?: ChartFormatter;
   /** Formatter por dataKey (usado quando eixos têm formatters distintos). */
   __formatterByKey?: Record<string, ChartFormatter>;
+  /** Formata o label do tooltip (mesmo formatter usado nos ticks do eixo X). */
+  __labelFormatter?: AxisTickFormatter;
 };
 
 export function ChartTooltip(props: TooltipProps<ValueType, NameType>) {
@@ -22,7 +24,13 @@ export function ChartTooltip(props: TooltipProps<ValueType, NameType>) {
 
   return (
     <div className="rounded-md border border-border bg-card px-3 py-2 text-xs shadow-md">
-      {label != null && <p className="mb-1 font-medium text-fg">{String(label)}</p>}
+      {label != null && (
+        <p className="mb-1 font-medium text-fg">
+          {injected.__labelFormatter
+            ? injected.__labelFormatter(label as string | number)
+            : String(label)}
+        </p>
+      )}
       <div className="space-y-1">
         {payload.map((entry, i) => {
           const fmt = formatterByKey?.[String(entry.dataKey)] ?? formatter;
@@ -53,12 +61,17 @@ export function ChartTooltip(props: TooltipProps<ValueType, NameType>) {
 export function tooltipRenderer(
   formatter?: ChartFormatter,
   formatterByKey?: Record<string, ChartFormatter>,
+  labelFormatter?: AxisTickFormatter,
 ) {
   return (props: TooltipProps<ValueType, NameType>): ReactElement => (
     <ChartTooltip
       {...(props as TooltipProps<ValueType, NameType> & InjectedFormatters)}
       // anexa formatter(s) via prop interna para não colidir com `formatter` do recharts
-      {...({ __formatter: formatter, __formatterByKey: formatterByKey } as InjectedFormatters)}
+      {...({
+        __formatter: formatter,
+        __formatterByKey: formatterByKey,
+        __labelFormatter: labelFormatter,
+      } as InjectedFormatters)}
     />
   );
 }
