@@ -22,13 +22,14 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./classlist.txt": "./dist/classlist.txt"
   },
   "sideEffects": [
     "**/*.css"
   ],
   "scripts": {
-    "build": "tsup && node ../../scripts/copy-assets.mjs ui styles.css",
+    "build": "tsup && node ../../scripts/copy-assets.mjs ui styles.css && node ../../scripts/gen-classlist.mjs ui",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
