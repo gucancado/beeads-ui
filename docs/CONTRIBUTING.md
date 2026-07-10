@@ -45,6 +45,28 @@ Antes: confirma critérios em [PRINCIPLES.md](./PRINCIPLES.md) — será usado e
 4. **major:** renomear token, mudar valor que altera identidade (cor primária drasticamente, etc.)
 5. Sempre `pnpm changeset` descrevendo o impacto visual nos apps consumidores
 
+## Integração com Tailwind nos apps consumidores
+
+O DS entrega classes utilitárias dentro do JS publicado. Cada pacote com
+componentes (`ui`, `charts`) publica um **manifesto estável** `dist/classlist.txt`
+com todos os tokens de classe, e injeta `@source "./classlist.txt"` no próprio
+`styles.css`.
+
+**Tailwind v4 (recomendado):** importar os styles já basta na maioria dos bundlers:
+`@import "@beeads/ui/styles.css";` (+ charts se usar). Se o bundler não propagar
+`@source` relativo de dentro de node_modules (caso Next + Turbopack), adicione
+explícito no globals.css do app:
+`@source "../node_modules/@beeads/ui/dist/classlist.txt";` (+ o do charts).
+
+**Tailwind v3 (legacy):** no tailwind.config: `presets: [require("@beeads/tokens/preset.cjs")]`
+e `content` incluindo `"./node_modules/@beeads/ui/dist/classlist.txt"` (+ charts).
+Pras CSS vars, importe `@import "@beeads/tokens/vars.css";` no globals.css —
+NÃO copie os valores à mão (o theme.css é v4-only). O `@source` injetado nos
+styles.css é at-rule desconhecida e inerte no pipeline v3.
+
+**Fontes fora do Next:** `@import "@beeads/fonts/google.css";` no CSS global +
+preconnect no HTML. Apps Next continuam com o entry JS (next/font).
+
 ## Mudanças que quebram API (major)
 
 1. Documentar migração em `docs/migrations/v<X>-to-v<Y>.md` com busca/substituição automatizável (regex, sed, codemod)
