@@ -55,7 +55,7 @@ Veja `docs/CONTRIBUTING.md` pra fluxo completo.
 
 DS suporta ambos via `@beeads/tokens`:
 - **v4** (recomendado): app importa `@beeads/tokens/theme.css` no globals.css. Classes Tailwind expostas via `@theme inline`.
-- **v3** (legacy): app usa `presets: [require("@beeads/tokens/preset.cjs")]` no tailwind.config + importa `theme.css` no globals.css pra ter as CSS vars.
+- **v3** (legacy): app usa `presets: [require("@beeads/tokens/preset.cjs")]` no tailwind.config + importa `@beeads/tokens/vars.css` no globals.css pra ter as CSS vars.
 
 Quando editar tokens: SEMPRE atualizar `theme.css` E `preset.cjs` em paralelo.
 

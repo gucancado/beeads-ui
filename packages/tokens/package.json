@@ -19,13 +19,14 @@
       "require": "./dist/index.js"
     },
     "./theme.css": "./dist/theme.css",
-    "./preset.cjs": "./dist/preset.cjs"
+    "./preset.cjs": "./dist/preset.cjs",
+    "./vars.css": "./dist/vars.css"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup && node ../../scripts/copy-assets.mjs tokens theme.css preset.cjs",
+    "build": "tsup && node ../../scripts/copy-assets.mjs tokens theme.css preset.cjs vars.css",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

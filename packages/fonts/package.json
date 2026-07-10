@@ -19,13 +19,15 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    }
+    },
+    "./google.css": "./dist/google.css"
   },
+  "sideEffects": ["**/*.css"],
   "peerDependencies": {
     "next": ">=14"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node ../../scripts/copy-assets.mjs fonts google.css",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

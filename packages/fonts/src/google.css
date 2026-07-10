@@ -1,0 +1,10 @@
+/* @beeads/fonts — entry framework-agnostic (Vite, HTML puro, qualquer bundler).
+   Apps Next devem preferir o entry JS (next/font, self-hosted).
+   Perf: adicione <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   no HTML do app — @import externo é render-blocking. */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Geist+Mono:wght@400..700&display=swap");
+
+:root {
+  --font-fraunces: "Fraunces", Georgia, serif;
+  --font-geist-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
