@@ -1,5 +1,18 @@
 # @beeads/ui
 
+## 0.7.0
+
+### Minor Changes
+
+- 1c09952: - dist/classlist.txt: manifesto estável de classes pra scan do Tailwind, exportado via `./classlist.txt`
+  - styles.css agora injeta `@source "./classlist.txt"` em vez de depender de scan dos bundles JS
+  - integração Tailwind v4 mais robusta, especialmente com Turbopack
+
+### Patch Changes
+
+- Updated dependencies [1c09952]
+  - @beeads/tokens@0.5.0
+
 ## 0.6.0
 
 ### Minor Changes
