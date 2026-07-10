@@ -1,5 +1,13 @@
 # @beeads/tokens
 
+## 0.5.0
+
+### Minor Changes
+
+- 1c09952: - novo export `./vars.css`: CSS vars puras pra Tailwind v3 — substitui cópia manual de valores em globals.css
+  - theme.css importa vars.css internamente, comportamento v4 inalterado
+  - apps legados v3 simplificam setup: só importar `@beeads/tokens/vars.css` em globals.css
+
 ## 0.4.0
 
 ### Minor Changes
