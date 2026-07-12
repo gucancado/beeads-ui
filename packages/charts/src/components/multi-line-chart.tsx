@@ -23,6 +23,10 @@ export interface MultiLineSeries<T> {
   label: string;
   axis?: "left" | "right";
   dash?: "solid" | "dashed" | "dotted";
+  /** Override de cor da linha (aceita CSS var). Default: paleta categórica por índice. */
+  color?: string;
+  /** Exclui a série da legenda automática (ex.: séries de comparação/contexto). */
+  hideFromLegend?: boolean;
 }
 
 export interface MultiLineChartProps<T extends Record<string, number | string>> {
@@ -81,10 +85,11 @@ export function MultiLineChart<T extends Record<string, number | string>>({
             type="monotone"
             dataKey={s.key as string}
             name={s.label}
-            stroke={chartColor(i)}
+            stroke={s.color ?? chartColor(i)}
             strokeWidth={2}
             strokeDasharray={dashMap[s.dash ?? "solid"]}
             dot={false}
+            legendType={s.hideFromLegend ? "none" : undefined}
           />
         ))}
       </LineChart>
