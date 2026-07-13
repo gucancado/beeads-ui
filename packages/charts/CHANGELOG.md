@@ -1,5 +1,11 @@
 # @beeads/charts
 
+## 0.6.0
+
+### Minor Changes
+
+- dc474f2: MultiLineChart: color e hideFromLegend por série (para séries de comparação/contexto)
+
 ## 0.5.0
 
 ### Minor Changes
