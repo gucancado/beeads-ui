@@ -126,6 +126,27 @@ describe("MultiLineChart", () => {
     );
     expect(container.querySelector("svg.recharts-surface")).toBeInTheDocument();
   });
+
+  it("aplica color e hideFromLegend por série", () => {
+    const data = [
+      { x: "2026-01-01", a: 1, b: 2 },
+      { x: "2026-01-02", a: 2, b: 3 },
+    ];
+    const { container } = render(
+      <MultiLineChart
+        data={data}
+        xKey="x"
+        series={[
+          { key: "a", label: "Atual" },
+          { key: "b", label: "Anterior", color: "#9ca3af", hideFromLegend: true },
+        ]}
+      />,
+    );
+    // stroke custom aplicado
+    expect(container.innerHTML).toContain("#9ca3af");
+    // série escondida não aparece na legenda
+    expect(container.querySelectorAll(".recharts-legend-item").length).toBeLessThanOrEqual(1);
+  });
 });
 
 describe("DonutChart", () => {

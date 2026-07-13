@@ -11,9 +11,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -24,9 +22,7 @@
     },
     "./google.css": "./dist/google.css"
   },
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": ["**/*.css"],
   "peerDependencies": {
     "next": ">=14"
   },
