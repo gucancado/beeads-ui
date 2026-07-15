@@ -43,9 +43,9 @@ export function BarChart<T extends Record<string, number | string>>({
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsBarChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-        <XAxis dataKey={xKey as string} tickFormatter={xFormatter} />
-        <YAxis tickFormatter={(v) => yFormatter(v)} />
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
+        <XAxis dataKey={xKey as string} tickFormatter={xFormatter} tick={{ fontSize: 11 }} />
+        <YAxis tickFormatter={(v) => yFormatter(v)} tick={{ fontSize: 11 }} />
         <Tooltip
           cursor={{ fill: "var(--color-muted)", opacity: 0.3 }}
           content={tooltipRenderer(tooltipFormatter ?? yFormatter, undefined, xFormatter)}
