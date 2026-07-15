@@ -18,7 +18,8 @@
  * `opacityValue` vem como `var(--tw-bg-opacity, 1)` na utility base e como `0.2` &
  * cia. no modificador — `calc()` cobre os dois.
  */
-const alpha = (varName) =>
+const alpha =
+  (varName) =>
   ({ opacityValue }) =>
     opacityValue === undefined
       ? `var(${varName})`
