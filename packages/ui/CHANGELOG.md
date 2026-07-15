@@ -1,5 +1,12 @@
 # @beeads/ui
 
+## 0.7.1
+
+### Patch Changes
+
+- Updated dependencies [5f71299]
+  - @beeads/tokens@0.5.1
+
 ## 0.7.0
 
 ### Minor Changes
