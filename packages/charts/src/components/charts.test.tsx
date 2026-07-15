@@ -349,3 +349,58 @@ describe("PeriodPicker", () => {
     expect(trigger.textContent).toMatch(/31\/01\/2026/);
   });
 });
+
+describe("padrão visual do sistema (defaults)", () => {
+  it("grid usa o token de borda, não o #ccc do recharts", () => {
+    const { container } = render(<LineChart data={timeSeries} xKey="month" series={series} />);
+    const grid = container.querySelector(".recharts-cartesian-grid line");
+    expect(grid?.getAttribute("stroke")).toBe("var(--color-border)");
+  });
+
+  it("ticks dos eixos usam fontSize 11", () => {
+    const { container } = render(<LineChart data={timeSeries} xKey="month" series={series} />);
+    const tick = container.querySelector(".recharts-cartesian-axis-tick text");
+    expect(tick?.getAttribute("font-size")).toBe("11");
+  });
+
+  it("linha é linear por default (série diária não é suavizada)", () => {
+    const { container } = render(<LineChart data={timeSeries} xKey="month" series={series} />);
+    const path = container.querySelector(".recharts-line-curve");
+    // curva linear = só comandos L entre pontos; monotone emite C (bézier)
+    expect(path?.getAttribute("d")).not.toContain("C");
+  });
+
+  it("curve=monotone continua disponível como escape hatch", () => {
+    const { container } = render(
+      <LineChart data={timeSeries} xKey="month" series={series} curve="monotone" />,
+    );
+    expect(container.querySelector(".recharts-line-curve")?.getAttribute("d")).toContain("C");
+  });
+
+  it("MultiLineChart e AreaChart seguem o mesmo default linear", () => {
+    const multi = render(
+      <MultiLineChart
+        data={timeSeries}
+        xKey="month"
+        series={[{ key: "clicks", label: "Cliques" }]}
+      />,
+    );
+    expect(multi.container.querySelector(".recharts-line-curve")?.getAttribute("d")).not.toContain(
+      "C",
+    );
+    const area = render(<AreaChart data={timeSeries} xKey="month" series={series} />);
+    expect(area.container.querySelector(".recharts-area-area")?.getAttribute("d")).not.toContain(
+      "C",
+    );
+  });
+
+  it("BarChart também tokeniza grid e tick", () => {
+    const { container } = render(<BarChart data={timeSeries} xKey="month" series={series} />);
+    expect(container.querySelector(".recharts-cartesian-grid line")?.getAttribute("stroke")).toBe(
+      "var(--color-border)",
+    );
+    expect(
+      container.querySelector(".recharts-cartesian-axis-tick text")?.getAttribute("font-size"),
+    ).toBe("11");
+  });
+});

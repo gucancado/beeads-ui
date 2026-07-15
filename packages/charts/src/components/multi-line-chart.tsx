@@ -42,6 +42,9 @@ export interface MultiLineChartProps<T extends Record<string, number | string>> 
   rightTooltipFormatter?: ChartFormatter;
   /** Formata os ticks do eixo X e o label do tooltip (ex.: formatters.dateShort pra séries temporais). */
   xFormatter?: AxisTickFormatter;
+  /** Curva da linha. Default "linear": série diária não é suavizada — monotone
+   * inventa valores entre pontos. Use "monotone" só em série contínua/agregada. */
+  curve?: "linear" | "monotone";
 }
 
 const dashMap = { solid: "0", dashed: "6 4", dotted: "2 4" };
@@ -56,6 +59,7 @@ export function MultiLineChart<T extends Record<string, number | string>>({
   leftTooltipFormatter,
   rightTooltipFormatter,
   xFormatter,
+  curve = "linear",
 }: MultiLineChartProps<T>) {
   const hasRight = series.some((s) => s.axis === "right");
 
@@ -70,11 +74,16 @@ export function MultiLineChart<T extends Record<string, number | string>>({
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={xKey as string} tickFormatter={xFormatter} />
-        <YAxis yAxisId="left" tickFormatter={(v) => leftFormatter(v)} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+        <XAxis dataKey={xKey as string} tickFormatter={xFormatter} tick={{ fontSize: 11 }} />
+        <YAxis yAxisId="left" tickFormatter={(v) => leftFormatter(v)} tick={{ fontSize: 11 }} />
         {hasRight && (
-          <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => rightFormatter(v)} />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            tickFormatter={(v) => rightFormatter(v)}
+            tick={{ fontSize: 11 }}
+          />
         )}
         <Tooltip content={tooltipRenderer(leftTip, tooltipByKey, xFormatter)} />
         <Legend />
@@ -82,7 +91,7 @@ export function MultiLineChart<T extends Record<string, number | string>>({
           <Line
             key={s.key as string}
             yAxisId={s.axis ?? "left"}
-            type="monotone"
+            type={curve}
             dataKey={s.key as string}
             name={s.label}
             stroke={s.color ?? chartColor(i)}

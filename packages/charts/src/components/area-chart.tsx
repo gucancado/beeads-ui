@@ -27,6 +27,9 @@ export interface AreaChartProps<T extends Record<string, number | string>> {
   tooltipFormatter?: ChartFormatter;
   /** Formata os ticks do eixo X e o label do tooltip (ex.: formatters.dateShort pra séries temporais). */
   xFormatter?: AxisTickFormatter;
+  /** Curva da linha. Default "linear": série diária não é suavizada — monotone
+   * inventa valores entre pontos. Use "monotone" só em série contínua/agregada. */
+  curve?: "linear" | "monotone";
 }
 
 export function AreaChart<T extends Record<string, number | string>>({
@@ -37,6 +40,7 @@ export function AreaChart<T extends Record<string, number | string>>({
   yFormatter = formatters.compact,
   tooltipFormatter,
   xFormatter,
+  curve = "linear",
 }: AreaChartProps<T>) {
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -56,14 +60,14 @@ export function AreaChart<T extends Record<string, number | string>>({
             </linearGradient>
           ))}
         </defs>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={xKey as string} tickFormatter={xFormatter} />
-        <YAxis tickFormatter={(v) => yFormatter(v)} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+        <XAxis dataKey={xKey as string} tickFormatter={xFormatter} tick={{ fontSize: 11 }} />
+        <YAxis tickFormatter={(v) => yFormatter(v)} tick={{ fontSize: 11 }} />
         <Tooltip content={tooltipRenderer(tooltipFormatter ?? yFormatter, undefined, xFormatter)} />
         {series.map((s, i) => (
           <Area
             key={s.key as string}
-            type="monotone"
+            type={curve}
             dataKey={s.key as string}
             name={s.label}
             stroke={chartColor(i)}
