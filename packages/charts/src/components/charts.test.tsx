@@ -350,57 +350,110 @@ describe("PeriodPicker", () => {
   });
 });
 
-describe("padrão visual do sistema (defaults)", () => {
-  it("grid usa o token de borda, não o #ccc do recharts", () => {
-    const { container } = render(<LineChart data={timeSeries} xKey="month" series={series} />);
-    const grid = container.querySelector(".recharts-cartesian-grid line");
-    expect(grid?.getAttribute("stroke")).toBe("var(--color-border)");
-  });
+// Um caso por componente, de propósito: asserts de componentes diferentes no mesmo
+// it() se mascaram — quando o primeiro lança, os seguintes nunca rodam (cobertura
+// fantasma) e a falha não aponta o culpado.
 
-  it("ticks dos eixos usam fontSize 11", () => {
-    const { container } = render(<LineChart data={timeSeries} xKey="month" series={series} />);
-    const tick = container.querySelector(".recharts-cartesian-axis-tick text");
-    expect(tick?.getAttribute("font-size")).toBe("11");
-  });
-
-  it("linha é linear por default (série diária não é suavizada)", () => {
-    const { container } = render(<LineChart data={timeSeries} xKey="month" series={series} />);
-    const path = container.querySelector(".recharts-line-curve");
-    // curva linear = só comandos L entre pontos; monotone emite C (bézier)
-    expect(path?.getAttribute("d")).not.toContain("C");
-  });
-
-  it("curve=monotone continua disponível como escape hatch", () => {
-    const { container } = render(
-      <LineChart data={timeSeries} xKey="month" series={series} curve="monotone" />,
-    );
-    expect(container.querySelector(".recharts-line-curve")?.getAttribute("d")).toContain("C");
-  });
-
-  it("MultiLineChart e AreaChart seguem o mesmo default linear", () => {
-    const multi = render(
+/** Grid + ticks valem pros 4 componentes cartesianos. */
+const gridTickCases = [
+  {
+    name: "LineChart",
+    mount: () => <LineChart data={timeSeries} xKey="month" series={series} />,
+  },
+  {
+    name: "MultiLineChart",
+    // dual-axis de propósito: o YAxis da direita é um elemento separado, sob `hasRight`
+    mount: () => (
       <MultiLineChart
         data={timeSeries}
         xKey="month"
-        series={[{ key: "clicks", label: "Cliques" }]}
-      />,
-    );
-    expect(multi.container.querySelector(".recharts-line-curve")?.getAttribute("d")).not.toContain(
-      "C",
-    );
-    const area = render(<AreaChart data={timeSeries} xKey="month" series={series} />);
-    expect(area.container.querySelector(".recharts-area-area")?.getAttribute("d")).not.toContain(
-      "C",
-    );
+        series={[
+          { key: "impressions" as const, label: "Impressões", axis: "left" as const },
+          { key: "clicks" as const, label: "Cliques", axis: "right" as const },
+        ]}
+      />
+    ),
+  },
+  {
+    name: "AreaChart",
+    mount: () => <AreaChart data={timeSeries} xKey="month" series={series} />,
+  },
+  {
+    name: "BarChart",
+    mount: () => <BarChart data={timeSeries} xKey="month" series={series} />,
+  },
+];
+
+/** `curve` só existe nos 3 que desenham linha/área (BarChart não tem curva). */
+const curveCases = [
+  {
+    name: "LineChart",
+    selector: ".recharts-line-curve",
+    mount: (curve?: "linear" | "monotone") => (
+      <LineChart data={timeSeries} xKey="month" series={series} curve={curve} />
+    ),
+  },
+  {
+    name: "MultiLineChart",
+    selector: ".recharts-line-curve",
+    mount: (curve?: "linear" | "monotone") => (
+      <MultiLineChart
+        data={timeSeries}
+        xKey="month"
+        series={[{ key: "clicks" as const, label: "Cliques" }]}
+        curve={curve}
+      />
+    ),
+  },
+  {
+    name: "AreaChart",
+    selector: ".recharts-area-area",
+    mount: (curve?: "linear" | "monotone") => (
+      <AreaChart data={timeSeries} xKey="month" series={series} curve={curve} />
+    ),
+  },
+];
+
+describe("padrão visual do sistema (defaults)", () => {
+  it.each(gridTickCases)(
+    "$name: grid usa o token de borda, não o #ccc do recharts",
+    ({ mount }) => {
+      const { container } = render(mount());
+      const lines = Array.from(container.querySelectorAll(".recharts-cartesian-grid line"));
+      expect(lines.length).toBeGreaterThan(0);
+      for (const line of lines) {
+        expect(line.getAttribute("stroke")).toBe("var(--color-border)");
+      }
+    },
+  );
+
+  it.each(gridTickCases)("$name: ticks dos eixos usam fontSize 11", ({ mount }) => {
+    const { container } = render(mount());
+    const ticks = Array.from(container.querySelectorAll(".recharts-cartesian-axis-tick text"));
+    expect(ticks.length).toBeGreaterThan(0);
+    // todos os eixos, não só o primeiro tick — pega eixo esquecido (ex.: YAxis da direita)
+    for (const tick of ticks) {
+      expect(tick.getAttribute("font-size")).toBe("11");
+    }
   });
 
-  it("BarChart também tokeniza grid e tick", () => {
-    const { container } = render(<BarChart data={timeSeries} xKey="month" series={series} />);
-    expect(container.querySelector(".recharts-cartesian-grid line")?.getAttribute("stroke")).toBe(
-      "var(--color-border)",
-    );
-    expect(
-      container.querySelector(".recharts-cartesian-axis-tick text")?.getAttribute("font-size"),
-    ).toBe("11");
-  });
+  it.each(curveCases)(
+    "$name: é linear por default (série diária não é suavizada)",
+    ({ selector, mount }) => {
+      const { container } = render(mount());
+      const d = container.querySelector(selector)?.getAttribute("d");
+      // sem isso, um seletor que não casa faria o not.toContain passar à toa
+      expect(d).toBeTruthy();
+      // curva linear = só comandos L entre pontos; monotone emite C (bézier)
+      expect(d).not.toContain("C");
+    },
+  );
+
+  it.each(curveCases)(
+    '$name: curve="monotone" continua disponível como escape hatch',
+    ({ selector, mount }) => {
+      const { container } = render(mount("monotone"));
+      expect(container.querySelector(selector)?.getAttribute("d")).toContain("C");
+    },
+  );
 });
