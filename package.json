@@ -12,7 +12,7 @@
     "test": "turbo run test",
     "storybook": "pnpm --filter @beeads-internal/storybook dev",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && biome format --write packages/*/package.json",
     "release": "turbo run build --filter=./packages/* && changeset publish"
   },
   "devDependencies": {

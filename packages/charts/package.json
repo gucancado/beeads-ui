@@ -11,9 +11,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -26,9 +24,7 @@
     "./styles.css": "./dist/styles.css",
     "./classlist.txt": "./dist/classlist.txt"
   },
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": ["**/*.css"],
   "scripts": {
     "build": "tsup && node ../../scripts/copy-assets.mjs charts styles.css && node ../../scripts/gen-classlist.mjs charts",
     "typecheck": "tsc --noEmit",
