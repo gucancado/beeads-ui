@@ -7,6 +7,9 @@ import { DayPicker } from "react-day-picker";
 import { cn } from "../lib/utils";
 import { buttonVariants } from "./button";
 
+const NAV_BUTTON =
+  "inline-flex h-9 w-9 items-center justify-center rounded-md text-fg/70 transition-colors hover:bg-accent hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-30";
+
 export type CalendarProps = ComponentProps<typeof DayPicker>;
 
 export function Calendar({
@@ -22,19 +25,15 @@ export function Calendar({
       className={cn("p-3", className)}
       classNames={{
         // react-day-picker v10 keys (snake_case)
-        months: "flex flex-col sm:flex-row gap-2",
+        months: "relative flex flex-col sm:flex-row gap-2",
         month: "flex flex-col gap-4",
-        month_caption: "flex justify-center pt-1 relative items-center",
+        // Nav numa faixa própria na altura do título do mês: área de clique
+        // 36x36 e 16px (gap do month) até os dias da semana.
+        month_caption: "flex h-9 items-center justify-center px-10",
         caption_label: "text-sm font-medium",
-        nav: "flex items-center gap-1",
-        button_previous: cn(
-          buttonVariants({ variant: "outline", size: "icon" }),
-          "absolute left-1 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-        ),
-        button_next: cn(
-          buttonVariants({ variant: "outline", size: "icon" }),
-          "absolute right-1 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-        ),
+        nav: "absolute inset-x-0 top-0 z-10 flex h-9 items-center justify-between",
+        button_previous: NAV_BUTTON,
+        button_next: NAV_BUTTON,
         month_grid: "w-full border-collapse",
         weekdays: "flex",
         weekday: "text-muted-fg rounded-md w-8 font-normal text-[0.8rem]",
